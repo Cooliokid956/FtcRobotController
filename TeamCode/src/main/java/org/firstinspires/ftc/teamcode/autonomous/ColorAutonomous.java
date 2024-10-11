@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.HDriveConfig;
 
-@Autonomous
+//@Autonomous
 public class ColorAutonomous extends OpMode {
     //OpenCvWebcam webcam;
     HDriveConfig robot = new HDriveConfig();
