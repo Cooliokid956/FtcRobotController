@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.config.LiftConfig;
 
-@TeleOp
+//@TeleOp
 public class Adjust extends OpMode {
 
     LiftConfig lift = new LiftConfig();

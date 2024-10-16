@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.config.ArmConfig;
 import org.firstinspires.ftc.teamcode.config.MeccanumConfig;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
-@TeleOp
+//@TeleOp
 public class MecanumOpMode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     ArmConfig arm = new ArmConfig();

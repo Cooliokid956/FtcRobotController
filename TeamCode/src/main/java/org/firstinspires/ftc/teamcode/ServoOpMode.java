@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.ServoConfig;
 
-@TeleOp
+//@TeleOp
 public class ServoOpMode extends OpMode {
     ServoConfig robot = new ServoConfig();
     final double startPosition = 0;

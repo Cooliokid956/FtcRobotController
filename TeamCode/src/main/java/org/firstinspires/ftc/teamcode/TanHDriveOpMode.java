@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.config.HDriveConfig;
 import org.firstinspires.ftc.teamcode.config.LiftConfig;
 
-@TeleOp
+//@TeleOp
 public class TanHDriveOpMode extends OpMode {
     HDriveConfig robot = new HDriveConfig();
     LiftConfig lift = new LiftConfig();

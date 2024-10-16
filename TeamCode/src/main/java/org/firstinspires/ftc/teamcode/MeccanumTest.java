@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.MeccanumConfig;
 
-@TeleOp
+//@TeleOp
 public class MeccanumTest extends OpMode {
     MeccanumConfig robot = new MeccanumConfig();
 

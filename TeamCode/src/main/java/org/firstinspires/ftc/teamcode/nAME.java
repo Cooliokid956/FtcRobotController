@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.HDriveConfig;
 
-@TeleOp
+//@TeleOp
 public class nAME extends OpMode {
     HDriveConfig robot = new HDriveConfig();
 
