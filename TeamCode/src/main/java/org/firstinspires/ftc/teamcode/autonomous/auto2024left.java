@@ -14,12 +14,15 @@ public class auto2024left extends OpMode {
     @Override
     public void init() {
         drive.config.init(hardwareMap);
-        resetRuntime();
     }
 
     @Override
+    public void start() {
+        resetRuntime();
+    }
+    @Override
     public void loop() {
-        fakeGamepad.left_stick_x = (getRuntime() < 2) ? -1.f : 0.f;
+        fakeGamepad.left_stick_x = (getRuntime() < 4) ? -1.f : 0.f;
         drive.drive(fakeGamepad, telemetry);
     }
 }

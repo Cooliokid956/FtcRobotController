@@ -46,7 +46,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * sort of manual control over sensor parameters such as exposure,
  * gain, ISO, or frame rate.
 
-@TeleOp
+//@TeleOp
 public class OpenCvAndVuforiaOnSameCameraExample extends LinearOpMode
 {
     VuforiaLocalizer vuforia = null;

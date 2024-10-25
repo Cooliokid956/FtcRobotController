@@ -40,7 +40,7 @@ import org.openftc.easyopencv.PipelineRecordingParameters;
  * when the viewport is tapped. The statistics box will turn red to indicate that
  * recording is active.
  */
-@TeleOp
+//@TeleOp
 public class PipelineRecordingExample extends LinearOpMode
 {
     OpenCvCamera phoneCam;

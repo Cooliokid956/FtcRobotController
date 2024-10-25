@@ -38,7 +38,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * This version of the internal camera example uses EasyOpenCV's interface to the
  * original Android camera API
  */
-@TeleOp
+//@TeleOp
 public class InternalCamera1Example extends LinearOpMode
 {
     OpenCvCamera phoneCam;

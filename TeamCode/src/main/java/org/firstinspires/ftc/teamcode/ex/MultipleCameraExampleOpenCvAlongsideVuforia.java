@@ -48,7 +48,7 @@ import java.util.List;
  * method in order to concurrently display the preview of two cameras, using
  * OpenCV on an internal camera, and Vuforia on a webcam
 
-@TeleOp
+//@TeleOp
 public class MultipleCameraExampleOpenCvAlongsideVuforia extends LinearOpMode
 {
     OpenCvCamera phoneCam;

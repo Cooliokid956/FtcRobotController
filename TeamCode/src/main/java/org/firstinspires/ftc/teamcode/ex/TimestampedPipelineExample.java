@@ -34,7 +34,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.TimestampedOpenCvPipeline;
 
-@TeleOp
+//@TeleOp
 public class TimestampedPipelineExample extends LinearOpMode
 {
     OpenCvCamera camera;

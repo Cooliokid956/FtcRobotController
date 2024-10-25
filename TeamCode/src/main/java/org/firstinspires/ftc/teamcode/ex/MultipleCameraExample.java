@@ -40,7 +40,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * method in order to concurrently display the preview of two cameras, using
  * OpenCV on both.
  */
-@TeleOp
+//@TeleOp
 public class MultipleCameraExample extends LinearOpMode
 {
     OpenCvCamera phoneCam;
