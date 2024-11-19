@@ -9,9 +9,9 @@ public class MecanumDrive {
     public MeccanumConfig config = new MeccanumConfig();
 
     boolean modeMag = true;
-    boolean backHeld = false;
-    boolean modeDir = false;
-    boolean startHeld = false;
+    boolean backHeld;
+    boolean modeDir;
+    boolean startHeld;
 
     public void drive(Gamepad gamepad, Telemetry telemetry) {
         double magnitude = modeMag ? 0.5 : 1;

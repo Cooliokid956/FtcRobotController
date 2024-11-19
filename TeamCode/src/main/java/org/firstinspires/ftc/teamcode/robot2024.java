@@ -25,7 +25,8 @@ public class robot2024 extends OpMode {
     @Override
     public void loop() {
         drive.drive(gamepad1, telemetry);
-        arm.move((int)(gamepad1.right_stick_y * 100.f));
+        arm.moveArm((int)(gamepad1.right_stick_y * 5.f));
+        arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
         arm.update();
     }
 }
