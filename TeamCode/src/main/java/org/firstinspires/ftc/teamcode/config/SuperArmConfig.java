@@ -8,8 +8,6 @@ public class SuperArmConfig {
     public DcMotor armL;
     public DcMotor armR;
     public DcMotor slide;
-    public Servo intake1;
-    public Servo intake2;
 
     public void init(HardwareMap hwMap) {
         armL = hwMap.get(DcMotor.class, "armL");
