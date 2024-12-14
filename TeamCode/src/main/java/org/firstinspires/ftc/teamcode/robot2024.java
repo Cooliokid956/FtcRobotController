@@ -9,7 +9,10 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 @TeleOp
 public class robot2024 extends OpMode {
+    // Drive
     MecanumDrive drive  = new MecanumDrive();
+
+    // Components
     SuperArm     arm    = new SuperArm    ();
     Intake       intake = new Intake      ();
 
@@ -30,6 +33,9 @@ public class robot2024 extends OpMode {
         arm.moveArm((int)(gamepad1.right_stick_y * 5.f));
         arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
         arm.update();
+
+
+        if (gamepad1.a) intake.spin();
         intake.update();
     }
 }

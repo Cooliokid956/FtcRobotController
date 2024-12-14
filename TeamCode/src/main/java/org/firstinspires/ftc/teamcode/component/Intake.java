@@ -5,7 +5,17 @@ import org.firstinspires.ftc.teamcode.config.IntakeConfig;
 public class Intake {
     public IntakeConfig config = new IntakeConfig();
 
-    public void update() {
+    boolean spinning;
+    public void spin() {
+        spinning = true;
+    }
 
+    public void swivelSetup() {
+
+    }
+
+    public void update() {
+        config.intake.setPower(spinning?1:0);
+        spinning = false;
     }
 }
