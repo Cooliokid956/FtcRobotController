@@ -10,7 +10,7 @@ public class MecanumDrive {
 
     boolean modeMag = true;
     boolean backHeld;
-    boolean modeDir;
+    boolean modeDir = true;
     boolean startHeld;
 
     public void drive(Gamepad gamepad, Telemetry telemetry) {

@@ -18,8 +18,9 @@ public class robot2024 extends OpMode {
 
     @Override
     public void init() {
-        drive.config.init(hardwareMap);
-        arm  .config.init(hardwareMap);
+        drive .config.init(hardwareMap);
+        arm   .config.init(hardwareMap);
+        intake.config.init(hardwareMap);
     }
 
     @Override
@@ -31,11 +32,16 @@ public class robot2024 extends OpMode {
     public void loop() {
         drive.drive(gamepad1, telemetry);
         arm.moveArm((int)(gamepad1.right_stick_y * 5.f));
+        telemetry.addData("lt", gamepad1.left_trigger);
+        telemetry.addData("rt", gamepad1.right_trigger);
         arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
-        arm.update();
+        arm.update(gamepad1);
 
 
-        if (gamepad1.a) intake.spin();
+        if (gamepad1.a) {
+            intake.spin();
+            telemetry.addData("intake", "spin");
+        }
         intake.update();
     }
 }

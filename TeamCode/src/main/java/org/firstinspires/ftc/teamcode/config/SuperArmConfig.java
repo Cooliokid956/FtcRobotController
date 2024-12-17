@@ -27,10 +27,12 @@ public class SuperArmConfig {
 
         slide = hwMap.get(DcMotor.class, "slide");
         slide.setDirection(DcMotor.Direction.REVERSE);
-        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setTargetPosition(0);
-        slide.setPower(1);
-        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        slide.setTargetPosition(0);
+//        slide.setPower(1);
+//        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // temp
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
