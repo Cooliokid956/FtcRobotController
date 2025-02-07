@@ -26,7 +26,7 @@ public class SuperArm {
     }
 
     public void update(Gamepad gp) {
-        armPos = MathUtils.clamp(armPos, armMin, armMax);
+//        armPos = MathUtils.clamp(armPos, armMin, armMax);
         config.armL.setTargetPosition(armPos);
         config.armR.setTargetPosition(armPos);
 

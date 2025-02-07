@@ -11,11 +11,11 @@ public class Intake {
     }
 
     public void swivelSetup() {
-
+        config.intakeSwivel.setPosition(.7);
     }
 
     public void update() {
-        config.intake.setPower(spinning?1:0);
+        config.intake.setPower(spinning ? 1 : 0);
         spinning = false;
     }
 }

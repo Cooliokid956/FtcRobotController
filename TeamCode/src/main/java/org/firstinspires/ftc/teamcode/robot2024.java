@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.component.Intake;
 import org.firstinspires.ftc.teamcode.component.SuperArm;
@@ -16,11 +17,15 @@ public class robot2024 extends OpMode {
     SuperArm     arm    = new SuperArm    ();
     Intake       intake = new Intake      ();
 
+    Gamepad prevgp = new Gamepad();
+
     @Override
     public void init() {
         drive .config.init(hardwareMap);
         arm   .config.init(hardwareMap);
         intake.config.init(hardwareMap);
+
+        prevgp.copy(gamepad1);
     }
 
     @Override
@@ -31,17 +36,24 @@ public class robot2024 extends OpMode {
     @Override
     public void loop() {
         drive.drive(gamepad1, telemetry);
-        arm.moveArm((int)(gamepad1.right_stick_y * 5.f));
+        arm.moveArm((int)(gamepad1.right_stick_y * 2.f));
         telemetry.addData("lt", gamepad1.left_trigger);
         telemetry.addData("rt", gamepad1.right_trigger);
         arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
         arm.update(gamepad1);
 
-
-        if (gamepad1.a) {
+        if (gamepad1.cross) {
             intake.spin();
             telemetry.addData("intake", "spin");
         }
+        if (gamepad1.triangle && gamepad1.triangle != prevgp.triangle) {
+
+        }
+        if (gamepad1.dpad_right) {
+            intake.config.intakeSwivel.setPosition(intake.config.intakeSwivel.getPosition()+0.01);
+        }
+        telemetry.addData("swivel", intake.config.intakeSwivel.getPosition());
         intake.update();
+        prevgp.copy(gamepad1);
     }
 }
