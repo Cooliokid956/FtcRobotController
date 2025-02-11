@@ -6,12 +6,16 @@ public class Intake {
     public IntakeConfig config = new IntakeConfig();
 
     boolean spinning;
+
     public void spin() {
         spinning = true;
     }
 
-    public void swivelSetup() {
-        config.intakeSwivel.setPosition(.7);
+    public void deploy(boolean deploy) {
+        config.intakeSwivel.setPosition(deploy ? .7 : 0);
+    }
+    public void toggleDeploy() {
+        deploy(config.intakeSwivel.getPosition() == 0);
     }
 
     public void update() {

@@ -47,7 +47,7 @@ public class robot2024 extends OpMode {
             telemetry.addData("intake", "spin");
         }
         if (gamepad1.triangle && gamepad1.triangle != prevgp.triangle) {
-
+            intake.toggleDeploy();
         }
         if (gamepad1.dpad_right) {
             intake.config.intakeSwivel.setPosition(intake.config.intakeSwivel.getPosition()+0.01);
