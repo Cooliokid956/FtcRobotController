@@ -7,9 +7,7 @@ public class Intake {
 
     boolean spinning;
 
-    public void spin() {
-        spinning = true;
-    }
+    public void spin() { spinning = true; }
 
     public void deploy(boolean deploy) {
         config.intakeSwivel.setPosition(deploy ? .7 : 0);

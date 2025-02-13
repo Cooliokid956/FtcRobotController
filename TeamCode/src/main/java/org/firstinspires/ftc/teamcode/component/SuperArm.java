@@ -13,22 +13,17 @@ public class SuperArm {
     int armMin = 0;
     int armMax = 420;
 
-    public void moveArm(int u) {
-        armPos += u;
-    }
+    public void moveArm(int u) { armPos += u; }
 
     int slidePos;
     int slideMin = 0;
     int slideMax = 420;
 
-    public void moveSlide(int u) {
-        slidePos += u;
-    }
+    public void moveSlide(int u) { slidePos += u; }
 
     public void update(Gamepad gp) {
 //        armPos = MathUtils.clamp(armPos, armMin, armMax);
-        config.armL.setTargetPosition(armPos);
-        config.armR.setTargetPosition(armPos);
+        config.arm.setTargetPosition(armPos);
 
 //        slidePos = MathUtils.clamp(slidePos, slideMin, slideMax);
 //        config.slide.setTargetPosition(slidePos);
