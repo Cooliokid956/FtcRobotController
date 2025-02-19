@@ -42,10 +42,15 @@ public class robot2024 extends OpMode {
         arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
         arm.update(gamepad1);
 
-        if (gamepad1.cross) {
-            intake.spin();
-            telemetry.addData("intake", "spin");
-        }
+        intake.config.intake.setPower(
+            gamepad1.cross
+            ? 1
+            : (
+                gamepad1.circle
+                ? -1
+                : 0
+            )
+        );
         if (gamepad1.triangle && gamepad1.triangle != prevgp.triangle) {
             intake.toggleDeploy();
         }
@@ -53,7 +58,6 @@ public class robot2024 extends OpMode {
             intake.config.intakeSwivel.setPosition(intake.config.intakeSwivel.getPosition()+0.01);
         }
         telemetry.addData("swivel", intake.config.intakeSwivel.getPosition());
-        intake.update();
         prevgp.copy(gamepad1);
     }
 }

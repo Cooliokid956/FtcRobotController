@@ -6,14 +6,21 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.config.SuperArmConfig;
 
-
 public class SuperArm {
     public SuperArmConfig config = new SuperArmConfig();
     int armPos;
     int armMin = 0;
     int armMax = 420;
 
-    public void moveArm(int u) { armPos += u; }
+    boolean stopped;
+
+    public void moveArm(int u) {
+        if (u == 0 && !stopped) {
+            armPos = config.arm.getCurrentPosition();
+        }
+        stopped = u == 0;
+        armPos += u;
+    }
 
     int slidePos;
     int slideMin = 0;

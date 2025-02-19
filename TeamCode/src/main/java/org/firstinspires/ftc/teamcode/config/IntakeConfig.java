@@ -11,6 +11,8 @@ public class IntakeConfig {
 
     public void init(HardwareMap hwMap) {
         intakeSwivel = hwMap.get(Servo.class, "intakeSwivel");
+        intakeSwivel.setDirection(Servo.Direction.REVERSE);
+        intakeSwivel.scaleRange(.2, .7);
         intakeSwivel.setPosition(0);
 
         intake = hwMap.get(CRServo.class, "intake");
