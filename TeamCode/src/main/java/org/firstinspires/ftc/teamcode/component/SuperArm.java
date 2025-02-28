@@ -8,33 +8,40 @@ import org.firstinspires.ftc.teamcode.config.SuperArmConfig;
 
 public class SuperArm {
     public SuperArmConfig config = new SuperArmConfig();
-    int armPos;
+    public int armPos;
+    boolean armStopped;
     int armMin = 0;
     int armMax = 420;
 
-    boolean stopped;
 
     public void moveArm(int u) {
-        if (u == 0 && !stopped) {
+        if (u == 0 && !armStopped) {
             armPos = config.arm.getCurrentPosition();
         }
-        stopped = u == 0;
+        armStopped = u == 0;
         armPos += u;
     }
 
-    int slidePos;
+    public int slidePos;
+    boolean slideStopped;
     int slideMin = 0;
-    int slideMax = 420;
+    int slideMax = 1850;
 
-    public void moveSlide(int u) { slidePos += u; }
+    public void moveSlide(int u) {
+        if (u == 0 && !slideStopped) {
+            slidePos = config.slide.getCurrentPosition();
+        }
+        slideStopped = u == 0;
+        slidePos += u;
+    }
 
     public void update(Gamepad gp) {
 //        armPos = MathUtils.clamp(armPos, armMin, armMax);
         config.arm.setTargetPosition(armPos);
 
-//        slidePos = MathUtils.clamp(slidePos, slideMin, slideMax);
-//        config.slide.setTargetPosition(slidePos);
+        slidePos = MathUtils.clamp(slidePos, slideMin, slideMax);
+        config.slide.setTargetPosition(slidePos);
         // temp
-        config.slide.setPower(gp.right_trigger-gp.left_trigger);
+//        config.slide.setPower(gp.right_trigger-gp.left_trigger);
     }
 }

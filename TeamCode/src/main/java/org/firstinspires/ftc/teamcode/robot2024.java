@@ -19,6 +19,11 @@ public class robot2024 extends OpMode {
 
     Gamepad prevgp = new Gamepad();
 
+    void setPitchAndLength(int p, int l) {
+        arm.armPos = p;
+        arm.slidePos = l;
+    }
+
     @Override
     public void init() {
         drive .config.init(hardwareMap);
@@ -39,7 +44,7 @@ public class robot2024 extends OpMode {
         arm.moveArm((int)(gamepad1.right_stick_y * 15.f));
         telemetry.addData("lt", gamepad1.left_trigger);
         telemetry.addData("rt", gamepad1.right_trigger);
-        arm.moveSlide((int)(gamepad1.right_trigger * 2.f - gamepad1.left_trigger * 2.f));
+        arm.moveSlide((int)((gamepad1.right_trigger - gamepad1.left_trigger) * 10.f));
         arm.update(gamepad1);
 
         intake.config.intake.setPower(
@@ -54,10 +59,16 @@ public class robot2024 extends OpMode {
         if (gamepad1.triangle && gamepad1.triangle != prevgp.triangle) {
             intake.toggleDeploy();
         }
-        if (gamepad1.dpad_right) {
-            intake.config.intakeSwivel.setPosition(intake.config.intakeSwivel.getPosition()+0.01);
-        }
+//        if (gamepad1.dpad_right) {
+//            intake.config.intakeSwivel.setPosition(intake.config.intakeSwivel.getPosition()-0.001);
+//        }
+        if (gamepad1.dpad_up  ) setPitchAndLength(3700,1600);
+        if (gamepad1.dpad_down) setPitchAndLength(0,0);
+
+        arm.config.slide.setPower(gamepad1.left_bumper ? .55 : .2);
         telemetry.addData("swivel", intake.config.intakeSwivel.getPosition());
+        telemetry.addData("pitch", arm.config.arm.getCurrentPosition());
+        telemetry.addData("length", arm.config.slide.getCurrentPosition());
         prevgp.copy(gamepad1);
     }
 }

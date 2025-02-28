@@ -4,7 +4,11 @@ import org.firstinspires.ftc.teamcode.config.IntakeConfig;
 
 public class Intake {
     public IntakeConfig config = new IntakeConfig();
+    boolean deployed;
 
-    public void deploy(boolean deploy) { config.intakeSwivel.setPosition(deploy ? 1 : 0); }
-    public void toggleDeploy() { deploy(config.intakeSwivel.getPosition() == .2); }
+    public void deploy(boolean deploy) {
+        deployed = deploy;
+        config.intakeSwivel.setPosition(deploy ? .55 : 0);
+    }
+    public void toggleDeploy() { deploy(!deployed); }
 }
