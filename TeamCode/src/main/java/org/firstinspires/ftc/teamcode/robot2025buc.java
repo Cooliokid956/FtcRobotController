@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 @TeleOp
 public class robot2025buc extends OpMode {
+    // Manual
+
     // Drive
     MecanumDrive drive  = new MecanumDrive();
 
