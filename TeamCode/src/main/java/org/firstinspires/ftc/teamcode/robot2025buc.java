@@ -2,16 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.component.Intake;
 import org.firstinspires.ftc.teamcode.component.SuperArm;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.lib.Manual;
 
 @TeleOp
 public class robot2025buc extends OpMode {
-    // Manual
-
     // Drive
     MecanumDrive drive  = new MecanumDrive();
 
@@ -27,6 +24,11 @@ public class robot2025buc extends OpMode {
     public void init() {
         drive .config.init(hardwareMap);
         arm   .config.init(hardwareMap);
+    }
+
+    @Override
+    public void init_loop() {
+        drive.manual.print(telemetry);
     }
 
     @Override
