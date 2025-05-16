@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.config.MeccanumConfig;
+import org.firstinspires.ftc.teamcode.config.MecanumConfig;
 
 //@TeleOp
 public class MeccanumTest extends OpMode {
-    MeccanumConfig robot = new MeccanumConfig();
+    MecanumConfig robot = new MecanumConfig();
 
     public void init() {
         robot.init(hardwareMap);

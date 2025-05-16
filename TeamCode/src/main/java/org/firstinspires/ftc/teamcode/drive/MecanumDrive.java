@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.config.MeccanumConfig;
+import org.firstinspires.ftc.teamcode.config.MecanumConfig;
 import org.firstinspires.ftc.teamcode.lib.Manual;
 
 public class MecanumDrive {
@@ -13,7 +13,7 @@ public class MecanumDrive {
             "Left Stick( X: Strafe, Y: Fwd/Back )\n" +
             "Right Stick( X: Turn )\n" +
             "Back/Share: Turbo, Start/Options: Flip direction");
-    public MeccanumConfig config = new MeccanumConfig();
+    public MecanumConfig config = new MecanumConfig();
 
     boolean turbo = false;
     boolean swapDir = true;

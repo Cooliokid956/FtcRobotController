@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class MeccanumConfig {
+public class MecanumConfig {
     public DcMotor flMotor, frMotor, blMotor, brMotor;
 
     public void init(HardwareMap hwMap) {

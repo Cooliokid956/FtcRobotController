@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.ArmConfig;
-import org.firstinspires.ftc.teamcode.config.MeccanumConfig;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 //@TeleOp
