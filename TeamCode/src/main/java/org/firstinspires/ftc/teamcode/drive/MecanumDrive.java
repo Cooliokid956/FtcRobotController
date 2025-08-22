@@ -8,10 +8,10 @@ import org.firstinspires.ftc.teamcode.lib.Manual;
 
 public class MecanumDrive {
     // Manual
-    public Manual manual = new Manual(""+
-            "Drive:\n" +
-            "Left Stick( X: Strafe, Y: Fwd/Back )\n" +
-            "Right Stick( X: Turn )\n" +
+    public Manual manual = new Manual(
+            "Drive:",
+            "Left Stick( X: Strafe, Y: Fwd/Back )",
+            "Right Stick( X: Turn )",
             "Back/Share: Turbo, Start/Options: Flip direction");
     public MecanumConfig config = new MecanumConfig();
 
