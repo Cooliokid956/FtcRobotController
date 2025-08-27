@@ -22,8 +22,8 @@ public class robot2025buc extends OpMode {
 
     @Override
     public void init() {
-        drive .config.init(hardwareMap);
-        arm   .config.init(hardwareMap);
+        drive.config.init(hardwareMap);
+        arm  .config.init(hardwareMap);
     }
 
     @Override

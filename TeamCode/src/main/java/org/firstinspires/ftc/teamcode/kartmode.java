@@ -53,13 +53,8 @@ public class kartmode extends OpMode {
     public void loop() {
         boolean lTrig = gamepad1.left_trigger  > .9f;
         boolean rTrig = gamepad1.right_trigger > .9f;
-        if (rTrig) {
-            accel += .014f;
-        }
-
-        if (lTrig) {
-            accel -= .01f;
-        }
+        if (rTrig)  accel += .014f;
+        if (lTrig)  accel -= .01f;
 
         accel *= .7f;
         accel = MathUtils.clamp(accel, -.2f, .33f);
@@ -90,34 +85,24 @@ public class kartmode extends OpMode {
             rotOffsetDrift = drift == 1 ? -.5f : .5f;
 
             if (timer > HI_BOOST*4) {
-                r = 1;
-                g = 0;
-                b =.8f;
+                r = 1; g = 0; b =.8f;
                 rumble_intensity(HI, 3);
                 driftMag = 1;
             } else if (timer > MID_BOOST*4) {
-                r = 1;
-                g = .5f;
-                b = 0;
+                r = 1; g = .5f; b = 0;
                 rumble_intensity(MED, 3);
                 driftMag = .8f;
             } else if (timer > LO_BOOST*4) {
-                r = 0;
-                g = 1;
-                b =.8f;
+                r = 0; g = 1; b =.8f;
                 rumble_intensity(LO, 3);
                 driftMag = .6f;
             } else {
-                r = 0;
-                g = 0;
-                b = 0;
+                r = 0; g = 0; b = 0;
                 driftMag = 0;
             }
 
             if ((timer % 4) > 2) {
-                r *= .6;
-                g *= .6;
-                b *= .6;
+                r *= .6; g *= .6; b *= .6;
             }
             gamepad1.setLedColor(r,g,b,1000);
             telemetry.addData("drift timer", timer/4);
