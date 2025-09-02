@@ -13,18 +13,15 @@ public class kartmode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Gamepad fakePad = new Gamepad();
 
-    int LO  = 8;
-    int MED = 11;
-    int HI  = 15;
+    int LO = 8, MED = 11, HI = 15;
+    Gamepad.RumbleEffect lo, med, hi;
     int intensity;
     int count;
     void rumble_intensity(int i, int counts) {
         intensity = i;
         count = counts;
     }
-    void update_rumble() {
-        if (--count > 0) gamepad1.rumble(intensity);
-    }
+    void update_rumble() { if (--count > 0) gamepad1.rumble(intensity); }
 
     float power;
     float accel;
@@ -42,19 +39,28 @@ public class kartmode extends OpMode {
     @Override
     public void init() {
         drive.config.init(hardwareMap);
+
+        Gamepad.RumbleEffect.Builder loBuilder = new Gamepad.RumbleEffect.Builder();
+        loBuilder.addStep(.2, .2, 3000);
+        lo = loBuilder.build();
+        Gamepad.RumbleEffect.Builder medBuilder = new Gamepad.RumbleEffect.Builder();
+        loBuilder.addStep(.2, .2, 3000);
+        med = medBuilder.build();
+        Gamepad.RumbleEffect.Builder hiBuilder = new Gamepad.RumbleEffect.Builder();
+        loBuilder.addStep(.2, .2, 3000);
+        hi = loBuilder.build();
+
     }
 
     @Override
-    public void start() {
-        // enable turbo
-        fakePad.back = true;
-    }
+    public void start() { fakePad.back = true; } // enable turbo
+
     @Override
     public void loop() {
         boolean lTrig = gamepad1.left_trigger  > .9f;
         boolean rTrig = gamepad1.right_trigger > .9f;
-        if (rTrig)  accel += .014f;
-        if (lTrig)  accel -= .01f;
+        if (rTrig) accel += .014f;
+        if (lTrig) accel -= .01f;
 
         accel *= .7f;
         accel = MathUtils.clamp(accel, -.2f, .33f);
@@ -105,6 +111,7 @@ public class kartmode extends OpMode {
                 r *= .6; g *= .6; b *= .6;
             }
             gamepad1.setLedColor(r,g,b,1000);
+            gamepad1.runLedEffect();
             telemetry.addData("drift timer", timer/4);
 
             if (!(gamepad1.left_bumper || gamepad1.right_bumper)) {
