@@ -13,15 +13,34 @@ public class kartmode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Gamepad fakePad = new Gamepad();
 
-    int LO = 8, MED = 11, HI = 15;
-    Gamepad.RumbleEffect lo, med, hi;
-    int intensity;
-    int count;
-    void rumble_intensity(int i, int counts) {
-        intensity = i;
-        count = counts;
+    private Gamepad.RumbleEffect generate_rumble(double intensity, int duration) {
+        Gamepad.RumbleEffect.Builder builder = new Gamepad.RumbleEffect.Builder();
+        builder.addStep(intensity, intensity, duration);
+        return builder.build();
     }
-    void update_rumble() { if (--count > 0) gamepad1.rumble(intensity); }
+    private Gamepad.RumbleEffect generate_rumble(double intensity) {
+        Gamepad.RumbleEffect.Builder builder = new Gamepad.RumbleEffect.Builder();
+        builder.addStep(intensity, intensity, 1000);
+        return builder.build();
+    }
+    Gamepad.RumbleEffect
+            LOW = generate_rumble(.2),
+            MED = generate_rumble(.5),
+            MAX = generate_rumble(1);
+
+    private Gamepad.LedEffect generate_blinker
+            (double r, double g, double b, double dim, int length, double duty) {
+        Gamepad.LedEffect.Builder builder = new Gamepad.LedEffect.Builder();
+        builder.setRepeating(true);
+        builder.addStep(r, g, b, (int)(length * duty));
+        builder.addStep(r * dim, g * dim, b * dim, (int)(length * (1 - duty)));
+        return builder.build();
+    }
+    Gamepad.LedEffect
+            LOW_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
+            MED_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
+            MAX_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
+            LIGHT_OFF = generate_blinker(0, 0, 0, 0, 0, 0);
 
     float power;
     float accel;
@@ -32,24 +51,13 @@ public class kartmode extends OpMode {
 
     int drift;
     float driftMag;
-    int LO_BOOST = 1;
-    int MID_BOOST = 3;
-    int HI_BOOST = 6;
+    int LOW_BOOST_TIME = 4;
+    int MID_BOOST_TIME = 12;
+    int MAX_BOOST_TIME = 24;
 
     @Override
     public void init() {
         drive.config.init(hardwareMap);
-
-        Gamepad.RumbleEffect.Builder loBuilder = new Gamepad.RumbleEffect.Builder();
-        loBuilder.addStep(.2, .2, 3000);
-        lo = loBuilder.build();
-        Gamepad.RumbleEffect.Builder medBuilder = new Gamepad.RumbleEffect.Builder();
-        loBuilder.addStep(.2, .2, 3000);
-        med = medBuilder.build();
-        Gamepad.RumbleEffect.Builder hiBuilder = new Gamepad.RumbleEffect.Builder();
-        loBuilder.addStep(.2, .2, 3000);
-        hi = loBuilder.build();
-
     }
 
     @Override
@@ -57,7 +65,7 @@ public class kartmode extends OpMode {
 
     @Override
     public void loop() {
-        boolean lTrig = gamepad1.left_trigger  > .9f;
+        boolean lTrig = gamepad1. left_trigger > .9f;
         boolean rTrig = gamepad1.right_trigger > .9f;
         if (rTrig) accel += .014f;
         if (lTrig) accel -= .01f;
@@ -71,7 +79,7 @@ public class kartmode extends OpMode {
         rot = gamepad1.left_stick_x/2 + rotOffsetDrift/2;
 
         if ((gamepad1.left_bumper || gamepad1.right_bumper) && drift == 0) {
-            rumble_intensity(MED, 3);
+            gamepad1.runRumbleEffect(MED);
             if (power > .4f) {
                 if (gamepad1.left_stick_x > .5f) drift = 1;
                 if (gamepad1.left_stick_x <-.5f) drift =-1;
@@ -80,27 +88,25 @@ public class kartmode extends OpMode {
         } else if (drift == 2) {
             power = driftMag;
             if (!rTrig) drift = 0;
-            rumble_intensity(HI, 3);
-            if (getRuntime() > 2) {
-                drift = 0;
-            }
+            if (getRuntime() > 2) drift = 0;
+
         } else if (drift != 0) {
             int timer = (int) Math.floor(getRuntime()*6);
             double r,g,b;
             if (!rTrig) drift = 0;
             rotOffsetDrift = drift == 1 ? -.5f : .5f;
 
-            if (timer > HI_BOOST*4) {
+            if (timer > MAX_BOOST_TIME) {
                 r = 1; g = 0; b =.8f;
-                rumble_intensity(HI, 3);
+                gamepad1.runRumbleEffect(MAX);
                 driftMag = 1;
-            } else if (timer > MID_BOOST*4) {
+            } else if (timer > MID_BOOST_TIME) {
                 r = 1; g = .5f; b = 0;
-                rumble_intensity(MED, 3);
+                gamepad1.runRumbleEffect(MED);
                 driftMag = .8f;
-            } else if (timer > LO_BOOST*4) {
+            } else if (timer > LOW_BOOST_TIME) {
                 r = 0; g = 1; b =.8f;
-                rumble_intensity(LO, 3);
+                gamepad1.runRumbleEffect(LOW);
                 driftMag = .6f;
             } else {
                 r = 0; g = 0; b = 0;
@@ -117,6 +123,7 @@ public class kartmode extends OpMode {
             if (!(gamepad1.left_bumper || gamepad1.right_bumper)) {
                 resetRuntime();
                 drift = driftMag > 0 ? 2 : 0;
+                if (drift == 2) gamepad1.runRumbleEffect(MAX);
                 rotOffsetDrift = 0;
             }
         } else rotOffsetDrift = 0;
@@ -139,7 +146,5 @@ public class kartmode extends OpMode {
         telemetry.addLine("");
         telemetry.addLine("");
         drive.drive(fakePad, telemetry);
-
-        update_rumble();
     }
 }
