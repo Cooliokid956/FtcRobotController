@@ -38,9 +38,17 @@ public class kartmode extends OpMode {
     }
     Gamepad.LedEffect
             LOW_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
-            MED_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
-            MAX_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
+            MED_BOOST = generate_blinker(1, .5, 0, .6, 300, 0.5),
+            MAX_BOOST = generate_blinker(1, 0, .8, .6, 300, 0.5),
             LIGHT_OFF = generate_blinker(0, 0, 0, 0, 0, 0);
+
+    Gamepad.LedEffect currEffect;
+    void set_led_effect(Gamepad gp, Gamepad.LedEffect effect) {
+        if (currEffect != effect) {
+            gp.runLedEffect(effect);
+            currEffect = effect;
+        }
+    }
 
     float power;
     float accel;
@@ -52,7 +60,7 @@ public class kartmode extends OpMode {
     int drift;
     float driftMag;
     int LOW_BOOST_TIME = 4;
-    int MID_BOOST_TIME = 12;
+    int MED_BOOST_TIME = 12;
     int MAX_BOOST_TIME = 24;
 
     @Override
@@ -97,27 +105,22 @@ public class kartmode extends OpMode {
             rotOffsetDrift = drift == 1 ? -.5f : .5f;
 
             if (timer > MAX_BOOST_TIME) {
-                r = 1; g = 0; b =.8f;
+                set_led_effect(gamepad1, MAX_BOOST);
                 gamepad1.runRumbleEffect(MAX);
                 driftMag = 1;
-            } else if (timer > MID_BOOST_TIME) {
-                r = 1; g = .5f; b = 0;
+            } else if (timer > MED_BOOST_TIME) {
+                set_led_effect(gamepad1, MED_BOOST);
                 gamepad1.runRumbleEffect(MED);
                 driftMag = .8f;
             } else if (timer > LOW_BOOST_TIME) {
-                r = 0; g = 1; b =.8f;
+                set_led_effect(gamepad1, LOW_BOOST);
                 gamepad1.runRumbleEffect(LOW);
                 driftMag = .6f;
             } else {
-                r = 0; g = 0; b = 0;
+                set_led_effect(gamepad1, LIGHT_OFF);
                 driftMag = 0;
             }
 
-            if ((timer % 4) > 2) {
-                r *= .6; g *= .6; b *= .6;
-            }
-            gamepad1.setLedColor(r,g,b,1000);
-            gamepad1.runLedEffect();
             telemetry.addData("drift timer", timer/4);
 
             if (!(gamepad1.left_bumper || gamepad1.right_bumper)) {
@@ -126,7 +129,10 @@ public class kartmode extends OpMode {
                 if (drift == 2) gamepad1.runRumbleEffect(MAX);
                 rotOffsetDrift = 0;
             }
-        } else rotOffsetDrift = 0;
+        } else {
+            rotOffsetDrift = 0;
+            set_led_effect(gamepad1, LIGHT_OFF);
+        }
 
         rotOffsetTurn = Math.abs(rot) > Math.abs(rotOffsetTurn) ? rot : rotOffsetTurn;
         rotOffsetTurn *= .3f;
