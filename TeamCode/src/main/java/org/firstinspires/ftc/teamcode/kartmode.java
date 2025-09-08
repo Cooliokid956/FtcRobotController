@@ -108,6 +108,7 @@ public class kartmode extends OpMode {
         power *= .95f;
 
         rot = gamepad1.left_stick_x/2 + rotOffsetDrift/2;
+        rot *= drift != 0 ? 0.2 : 1;
 
         if ((gamepad1.leftBumperWasPressed() || gamepad1.rightBumperWasPressed()) && drift == 0) {
             if (power > .4f) {

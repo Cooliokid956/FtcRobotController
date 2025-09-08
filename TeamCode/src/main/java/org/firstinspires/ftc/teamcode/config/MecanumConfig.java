@@ -12,7 +12,7 @@ public class MecanumConfig {
         frMotor = hwMap.get(DcMotor.class, "frMotor");
         blMotor = hwMap.get(DcMotor.class, "blMotor");
         brMotor = hwMap.get(DcMotor.class, "brMotor");
-        flMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        flMotor.setDirection(DcMotorSimple.Direction.REVERSE); // Comment this out for Their robot
         blMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
