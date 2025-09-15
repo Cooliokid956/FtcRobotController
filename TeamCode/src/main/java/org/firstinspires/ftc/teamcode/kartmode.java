@@ -7,11 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.lib.Manual;
 
 @TeleOp
 public class kartmode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Gamepad fakePad = new Gamepad(); // to puppeteer drive
+    Manual manual = new Manual(
+            "Welcome to Kart Mode!",
+            "Turn: Left Stick",
+            "Accelerate: Right Trigger",
+            "Reverse: Left Trigger",
+            "Drift: Right Bumper"
+    );
 
     int
     LOW_BOOST_TIME = 4,
