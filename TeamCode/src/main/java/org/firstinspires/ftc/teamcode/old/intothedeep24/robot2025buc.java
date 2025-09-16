@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.component.SuperArm;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
-@TeleOp
+//@TeleOp
 public class robot2025buc extends OpMode {
     // Drive
     MecanumDrive drive  = new MecanumDrive();

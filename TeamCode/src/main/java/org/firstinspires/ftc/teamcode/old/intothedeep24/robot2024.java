@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.component.Intake;
 import org.firstinspires.ftc.teamcode.component.SuperArm;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
-@TeleOp
+//@TeleOp
 public class robot2024 extends OpMode {
     // Drive
     MecanumDrive drive  = new MecanumDrive();

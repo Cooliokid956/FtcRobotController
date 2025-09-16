@@ -8,18 +8,13 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 @TeleOp
 public class RobotDecode extends OpMode {
-    // Drive
-    MecanumDrive drive  = new MecanumDrive();
+    MecanumDrive drive  = new MecanumDrive(); // Drive
 
     @Override
-    public void init() {
-        drive.config.init(hardwareMap);
-    }
+    public void init() { drive.config.init(hardwareMap); }
 
     @Override
-    public void init_loop() {
-        drive.manual.print(telemetry);
-    }
+    public void init_loop() { drive.manual.print(telemetry); }
 
     @Override
     public void loop() {

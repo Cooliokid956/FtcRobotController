@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.lib.Manual;
 @TeleOp
 public class kartmode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
-    Gamepad fakePad = new Gamepad(); // to puppeteer drive
     Manual manual = new Manual(
             "Welcome to Kart Mode!",
             "Turn: Left Stick",
@@ -21,13 +20,14 @@ public class kartmode extends OpMode {
             "Drift: Right Bumper"
     );
 
+    Gamepad fakePad = new Gamepad(); // to puppeteer drive
+
     int
     LOW_BOOST_TIME = 4,
     MED_BOOST_TIME = 12,
     MAX_BOOST_TIME = 24;
 
-    // rumble helpers
-    double
+    double // rumble helpers
     RUMBLE_INT_NIL = 0,
     RUMBLE_INT_LOW = .05,
     RUMBLE_INT_MED = .2,
@@ -95,9 +95,7 @@ public class kartmode extends OpMode {
     float driftMag;
 
     @Override
-    public void init() {
-        drive.config.init(hardwareMap);
-    }
+    public void init() { drive.config.init(hardwareMap); }
 
     @Override
     public void start() { fakePad.back = true; } // enable turbo
