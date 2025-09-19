@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JTC;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class TestMotor extends TestItem{
+public class TestMotor extends TestItem {
     private double speed;
     private DcMotorEx motor;
     public TestMotor(String description, double speed, DcMotorEx motor) {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JTC;
 
 import static com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType.getMotorType;
 

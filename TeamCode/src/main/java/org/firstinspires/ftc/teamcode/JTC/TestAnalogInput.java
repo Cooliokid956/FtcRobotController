@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JTC;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class TestAnalogInput extends TestItem{
+public class TestAnalogInput extends TestItem {
     private AnalogInput analogInput;
     private double min;
     private double max;

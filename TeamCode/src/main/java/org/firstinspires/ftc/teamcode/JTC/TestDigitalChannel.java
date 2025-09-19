@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JTC;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class TestDigitalChannel extends TestItem{
+public class TestDigitalChannel extends TestItem {
     DigitalChannel digitalChannel;
     double min;
     double max;
