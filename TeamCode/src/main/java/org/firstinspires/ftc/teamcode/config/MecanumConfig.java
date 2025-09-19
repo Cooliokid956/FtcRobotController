@@ -15,16 +15,4 @@ public class MecanumConfig {
         flMotor.setDirection(DcMotorSimple.Direction.REVERSE); // Comment this out for Their robot
         blMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-
-//    public void driveInit(double magnitude) {
-//        double lrPower = gamepad1.left_stick_x;
-//        double fwdPower = gamepad1.left_stick_y;
-//        double turn = gamepad1.right_stick_x;
-//        double max = Math.max(fwdPower + turn, fwdPower - turn);
-//        lMotor.setPower((fwdPower + turn) / max * magnitude);
-//        rMotor.setPower((fwdPower - turn) / max * magnitude);
-//        cMotor.setPower((lrPower) * magnitude);
-//
-//
-//    }
 }

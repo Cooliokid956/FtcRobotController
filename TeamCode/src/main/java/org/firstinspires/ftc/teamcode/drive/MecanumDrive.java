@@ -15,47 +15,46 @@ public class MecanumDrive {
             "Back/Share: Turbo, Start/Options: Flip direction");
     public MecanumConfig config = new MecanumConfig();
 
-    boolean turbo = false;
-    boolean swapDir = true;
-    boolean backHeld, startHeld;
+    boolean turbo = false, swapDir = true;
 
     public void drive(Gamepad gamepad, Telemetry telemetry) {
-        double magnitude = turbo ? 1 : .5;
-        double lrPower = (Math.abs(gamepad.left_stick_x) > 0.04 ? gamepad.left_stick_x : 0) * magnitude;
-        double fwdPower = -gamepad.left_stick_y * magnitude;
-        double turn = gamepad.right_stick_x;
-        double max = 1.0;
+        double
+                magnitude = turbo ? 1 : .5,
+                lrPower =
+                        Math.abs(gamepad.left_stick_x) > 0.04
+                                ? gamepad.left_stick_x
+                                : 0,
+                fwdPower = -gamepad.left_stick_y,
+                turn = gamepad.right_stick_x,
+                max = 1.0;
 
-        if (gamepad.back && !backHeld) {
-            turbo = !turbo;
-            backHeld = true;
-        } else if (!gamepad.back) {
-            backHeld = false;
-        }
-        if (gamepad.start && !startHeld) {
-            swapDir = !swapDir;
-            startHeld = true;
-        } else if (!gamepad.start) {
-            startHeld = false;
-        }
+        fwdPower *= magnitude;
+         lrPower *= magnitude;
+
+        if (gamepad. backWasPressed())   turbo = !  turbo;
+        if (gamepad.startWasPressed()) swapDir = !swapDir;
+
         if (swapDir) {
-            fwdPower = -fwdPower;
-            lrPower = -lrPower;
+            fwdPower *= -1;
+             lrPower *= -1;
         }
 
-        max = Math.max(Math.abs((fwdPower + turn + lrPower)), max);
-        max = Math.max(Math.abs((fwdPower + turn - lrPower)), max);
-        max = Math.max(Math.abs((fwdPower - turn - lrPower)), max);
-        max = Math.max(Math.abs((fwdPower - turn + lrPower)), max);
+        max = Math.max(Math.abs((fwdPower + turn + lrPower)),
+              Math.max(Math.abs((fwdPower + turn - lrPower)),
+              Math.max(Math.abs((fwdPower - turn - lrPower)),
+              Math.max(Math.abs((fwdPower - turn + lrPower)), max))));
         config.flMotor.setPower((fwdPower + turn + lrPower) / max);
         config.blMotor.setPower((fwdPower + turn - lrPower) / max);
         config.frMotor.setPower((fwdPower - turn - lrPower) / max);
         config.brMotor.setPower((fwdPower - turn + lrPower) / max);
-        telemetry.addLine("y: " + fwdPower);
-        telemetry.addLine("x:" + turn);
-        telemetry.addLine("right x:" + lrPower);
-        telemetry.addLine(config.flMotor.getPower() + "--" + config.frMotor.getPower());
-        telemetry.addLine("|--|");
-        telemetry.addLine(config.blMotor.getPower() + "--" + config.brMotor.getPower());
+
+        telemetry.addData("y", fwdPower);
+        telemetry.addData("x", lrPower);
+        telemetry.addData("turn", turn);
+        telemetry.addLine();
+        telemetry.addData(":", "%4.2f-%4.2f ::", config.flMotor.getPower(), config.frMotor.getPower());
+        telemetry.addData(":", "|-----| ::");
+        telemetry.addData(":", "|-----| ::");
+        telemetry.addData(":", "%4.2f-%4.2f ::", config.blMotor.getPower(), config.brMotor.getPower());
     }
 }
