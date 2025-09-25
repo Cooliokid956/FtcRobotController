@@ -21,5 +21,7 @@ public class RobotDecode extends OpMode {
         drive.drive(gamepad1, telemetry);
         telemetry.addData("lt", gamepad1.left_trigger);
         telemetry.addData("rt", gamepad1.right_trigger);
+
+        // -  awaiting further structures to program  - //
     }
 }

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.lib.Manual;
 
 @TeleOp
-public class kartmode extends OpMode {
+public class KartMode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Manual manual = new Manual(
             "Welcome to Kart Mode!",
@@ -84,18 +84,14 @@ public class kartmode extends OpMode {
         }
     }
 
-    float power;
-    float accel;
-    float rotOffsetDrift;
-    float rotOffsetTurn;
-    float rotOffset;
-    float rot;
+    float power, accel, rotOffsetDrift, rotOffsetTurn, rotOffset, rot;
 
-    int drift;
-    float driftMag;
+    int drift; float driftMag;
 
     @Override
     public void init() { drive.config.init(hardwareMap); }
+    @Override
+    public void init_loop() { manual.print(telemetry); }
 
     @Override
     public void start() { fakePad.back = true; } // enable turbo
@@ -105,7 +101,7 @@ public class kartmode extends OpMode {
         boolean lTrig = gamepad1. left_trigger > .9f;
         boolean rTrig = gamepad1.right_trigger > .9f && !lTrig;
         if (rTrig) accel += .014f;
-        if (lTrig) accel -= .01f;
+        if (lTrig) accel -= .010f;
 
         accel *= .7f;
         accel = MathUtils.clamp(accel, -.2f, .33f);
@@ -114,7 +110,7 @@ public class kartmode extends OpMode {
         power *= .95f;
 
         rot = gamepad1.left_stick_x/2 + rotOffsetDrift/2;
-        rot *= drift != 0 ? 0.2 : 1;
+        rot *= drift != 0 ? 0.2f : 1;
 
         if ((gamepad1.leftBumperWasPressed() || gamepad1.rightBumperWasPressed()) && drift == 0) {
             if (power > .4f) {
@@ -136,7 +132,7 @@ public class kartmode extends OpMode {
 
             if (timer > MAX_BOOST_TIME) {
                 set_led_effect(gamepad1, MAX_BOOST);
-                driftMag = 1;
+                driftMag = 1.f;
             } else if (timer > MED_BOOST_TIME) {
                 set_led_effect(gamepad1, MED_BOOST);
                 driftMag = .8f;
@@ -145,7 +141,7 @@ public class kartmode extends OpMode {
                 driftMag = .6f;
             } else {
                 set_led_effect(gamepad1, LIGHT_OFF);
-                driftMag = 0;
+                driftMag = .0f;
             }
 
             telemetry.addData("drift timer", timer);
@@ -176,8 +172,9 @@ public class kartmode extends OpMode {
         telemetry.addData("accel", accel);
         telemetry.addData("rot", rot);
         telemetry.addData("rotOffset", rotOffset);
-        telemetry.addLine("");
-        telemetry.addLine("");
+        telemetry.addLine();
+        telemetry.addLine();
+
         drive.drive(fakePad, telemetry);
     }
 }

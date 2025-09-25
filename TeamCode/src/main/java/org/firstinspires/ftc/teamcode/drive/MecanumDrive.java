@@ -28,15 +28,13 @@ public class MecanumDrive {
                 turn = gamepad.right_stick_x,
                 max = 1.0;
 
-        fwdPower *= magnitude;
-         lrPower *= magnitude;
+        fwdPower *= magnitude; lrPower *= magnitude;
 
         if (gamepad. backWasPressed())   turbo = !  turbo;
         if (gamepad.startWasPressed()) swapDir = !swapDir;
 
         if (swapDir) {
-            fwdPower *= -1;
-             lrPower *= -1;
+            fwdPower *= -1; lrPower *= -1;
         }
 
         max = Math.max(Math.abs((fwdPower + turn + lrPower)),
