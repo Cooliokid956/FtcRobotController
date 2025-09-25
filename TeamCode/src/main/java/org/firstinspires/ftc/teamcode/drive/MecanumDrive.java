@@ -17,6 +17,20 @@ public class MecanumDrive {
 
     boolean turbo = false, swapDir = true;
 
+    public void toggle_turbo(boolean turbo) {
+        this.turbo = turbo;
+    }
+    public void toggle_turbo() {
+        this.turbo = !this.turbo;
+    }
+
+    public void toggle_direction(boolean forwards) {
+        this.swapDir = forwards;
+    }
+    public void toggle_direction() {
+        this.swapDir = !this.swapDir;
+    }
+
     public void drive(Gamepad gamepad, Telemetry telemetry) {
         double
                 magnitude = turbo ? 1 : .5,
@@ -30,8 +44,8 @@ public class MecanumDrive {
 
         fwdPower *= magnitude; lrPower *= magnitude;
 
-        if (gamepad. backWasPressed())   turbo = !  turbo;
-        if (gamepad.startWasPressed()) swapDir = !swapDir;
+        if (gamepad. backWasPressed()) toggle_turbo();
+        if (gamepad.startWasPressed()) toggle_direction();
 
         if (swapDir) {
             fwdPower *= -1; lrPower *= -1;

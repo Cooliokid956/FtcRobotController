@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.old.powerplay22;
+package org.firstinspires.ftc.teamcode.old.y22powerplay;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 
 //@TeleOp

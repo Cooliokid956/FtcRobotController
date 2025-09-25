@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.old.intothedeep24;
+package org.firstinspires.ftc.teamcode.old.y24intothedeep;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.component.SuperArm;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
