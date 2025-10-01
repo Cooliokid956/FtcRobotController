@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.old.y22powerplay.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.config.HDriveConfig;
-import org.firstinspires.ftc.teamcode.config.LiftConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.HDriveConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.LiftConfig;
 import org.firstinspires.ftc.teamcode.pipelines.pipelineCVrgb;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -14,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 //@Autonomous
-public class ___Right_ extends LinearOpMode {
+public class ___Right_Merge extends LinearOpMode {
 
     HDriveConfig robot = new HDriveConfig();
     LiftConfig lift = new LiftConfig();
@@ -128,7 +127,7 @@ public class ___Right_ extends LinearOpMode {
                             case 3:
                                 robot.lMotor.setPower(0.8);
                                 robot.rMotor.setPower(0.8);
-                                robot.lMotor.setTargetPosition(525);
+                                robot.lMotor.setTargetPosition(575);
                                 robot.rMotor.setTargetPosition(-510);
                                 if (absDiff(robot.lMotor.getCurrentPosition(),robot.lMotor.getTargetPosition())<leniency && absDiff(robot.rMotor.getCurrentPosition(),robot.rMotor.getTargetPosition())<leniency){
                                     sleep(1000);

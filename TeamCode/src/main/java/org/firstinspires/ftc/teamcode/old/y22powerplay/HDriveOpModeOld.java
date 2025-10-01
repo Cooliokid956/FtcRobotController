@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.old.y22powerplay;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.config.HDriveConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.HDriveConfig;
 
 //@TeleOp
 public class HDriveOpModeOld extends OpMode {

@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.component;
+package org.firstinspires.ftc.teamcode.old.y24intothedeep.component;
 
 import androidx.core.math.MathUtils;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.config.SuperArmConfig;
+import org.firstinspires.ftc.teamcode.old.y24intothedeep.config.SuperArmConfig;
 
 public class SuperArm {
     public SuperArmConfig config = new SuperArmConfig();

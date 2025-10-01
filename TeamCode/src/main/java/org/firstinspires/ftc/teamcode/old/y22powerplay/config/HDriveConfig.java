@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.config;
+package org.firstinspires.ftc.teamcode.old.y22powerplay.config;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 

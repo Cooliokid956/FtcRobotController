@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.old.y23centerstage;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.config.ArmConfig;
+import org.firstinspires.ftc.teamcode.old.y23centerstage.config.ArmConfig;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 //@TeleOp

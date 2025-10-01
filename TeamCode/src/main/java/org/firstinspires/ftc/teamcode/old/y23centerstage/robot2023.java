@@ -5,7 +5,7 @@ import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.config.ArmConfig;
+import org.firstinspires.ftc.teamcode.old.y23centerstage.config.ArmConfig;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 //@TeleOp

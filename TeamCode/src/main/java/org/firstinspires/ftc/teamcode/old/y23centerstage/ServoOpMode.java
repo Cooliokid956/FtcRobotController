@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.old.y23centerstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.ServoConfig;
+import org.firstinspires.ftc.teamcode.old.y23centerstage.config.ServoConfig;
 
 //@TeleOp
 public class ServoOpMode extends OpMode {

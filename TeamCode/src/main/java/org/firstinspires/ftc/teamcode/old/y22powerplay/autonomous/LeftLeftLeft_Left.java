@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.old.y22powerplay.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.config.HDriveConfig;
-import org.firstinspires.ftc.teamcode.config.LiftConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.HDriveConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.LiftConfig;
 import org.firstinspires.ftc.teamcode.pipelines.pipelineCVrgb;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -14,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 //@Autonomous
-public class ___Right_Edit extends LinearOpMode {
+public class LeftLeftLeft_Left extends LinearOpMode {
 
     HDriveConfig robot = new HDriveConfig();
     LiftConfig lift = new LiftConfig();
@@ -90,7 +89,7 @@ public class ___Right_Edit extends LinearOpMode {
             robot.claw.setPosition(0);
             lift.lift.setPower(0.7);
             lift.lift.setTargetPosition(400);
-            while (opModeIsActive()) {
+                      while (opModeIsActive()) {
                 telemetry.addLine(pipeline.colorDetected);
                 telemetry.addData("State", state);
                 telemetry.addData("Step", step);
@@ -102,7 +101,7 @@ public class ___Right_Edit extends LinearOpMode {
                         switch (step) {
                             case 1:
                                 robot.cMotor.setPower(0.8);
-                                robot.cMotor.setTargetPosition(-2500);
+                                robot.cMotor.setTargetPosition(2500);
                                 if (absDiff(robot.cMotor.getCurrentPosition(),robot.cMotor.getTargetPosition())<leniency) {
                                     sleep(1000);
                                     resetMotors();
@@ -113,23 +112,23 @@ public class ___Right_Edit extends LinearOpMode {
                             case 2:
                                 robot.lMotor.setPower(0.8);
                                 robot.rMotor.setPower(0.8);
-                                robot.lMotor.setTargetPosition(2560);
-                                robot.rMotor.setTargetPosition(2560);
-                                lift.lift.setPower(0.8);
-                                lift.lift.setTargetPosition(2900);
+                                robot.lMotor.setTargetPosition(4850);
+                                robot.rMotor.setTargetPosition(4850);
+//                                lift.lift.setPower(0.8);
+//                                lift.lift.setTargetPosition(4200);
 
                                 if (absDiff(robot.lMotor.getCurrentPosition(),robot.lMotor.getTargetPosition())<leniency && absDiff(robot.rMotor.getCurrentPosition(),robot.rMotor.getTargetPosition())<leniency){
                                     sleep(1000);
                                     resetMotors();
                                     resetRuntime();
-                                    step = 3;
+                                    state = 2;
                                 }
                                 break;
                             case 3:
                                 robot.lMotor.setPower(0.8);
                                 robot.rMotor.setPower(0.8);
-                                robot.lMotor.setTargetPosition(575);
-                                robot.rMotor.setTargetPosition(-510);
+                                robot.lMotor.setTargetPosition(-510);
+                                robot.rMotor.setTargetPosition(525);
                                 if (absDiff(robot.lMotor.getCurrentPosition(),robot.lMotor.getTargetPosition())<leniency && absDiff(robot.rMotor.getCurrentPosition(),robot.rMotor.getTargetPosition())<leniency){
                                     sleep(1000);
                                     resetMotors();
@@ -140,8 +139,8 @@ public class ___Right_Edit extends LinearOpMode {
                             case 4:
                                 robot.lMotor.setPower(0.2);
                                 robot.rMotor.setPower(0.2);
-                                robot.lMotor.setTargetPosition(650);
-                                robot.rMotor.setTargetPosition(650);
+                                robot.lMotor.setTargetPosition(410);
+                                robot.rMotor.setTargetPosition(410);
                                 if (absDiff(robot.lMotor.getCurrentPosition(),robot.lMotor.getTargetPosition())<leniency && absDiff(robot.rMotor.getCurrentPosition(),robot.rMotor.getTargetPosition())<leniency){
                                     sleep(700);
                                     resetMotors();
@@ -197,8 +196,8 @@ public class ___Right_Edit extends LinearOpMode {
                             case 10:
                                 robot.lMotor.setPower(0.8);
                                 robot.rMotor.setPower(0.8);
-                                robot.lMotor.setTargetPosition(-520);
-                                robot.rMotor.setTargetPosition(520);
+                                robot.lMotor.setTargetPosition(520);
+                                robot.rMotor.setTargetPosition(-520);
                                 if (absDiff(robot.lMotor.getCurrentPosition(),robot.lMotor.getTargetPosition())<leniency && absDiff(robot.rMotor.getCurrentPosition(),robot.rMotor.getTargetPosition())<leniency){
                                     sleep(750);
                                     resetMotors();
@@ -249,19 +248,20 @@ public class ___Right_Edit extends LinearOpMode {
 
                                  */
                         }
-                    break;
+                        break;
 
                     case 2:
                         switch (color) {
                             case 1:
+                                robot.cMotor.setPower(.5);
+                                robot.cMotor.setTargetPosition(-4900);
                                 break;
                             case 2:
                                 robot.cMotor.setPower(.5);
-                                robot.cMotor.setTargetPosition(2200);
+                                robot.cMotor.setTargetPosition(-2200);
                                 break;
                             case 3:
-                                robot.cMotor.setPower(.5);
-                                robot.cMotor.setTargetPosition(4850);
+                                break;
                         }
                         break;
                 }

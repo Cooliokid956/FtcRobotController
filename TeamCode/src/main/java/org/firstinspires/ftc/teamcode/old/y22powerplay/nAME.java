@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.old.y22powerplay;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.HDriveConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.HDriveConfig;
 
 //@TeleOp
 public class nAME extends OpMode {

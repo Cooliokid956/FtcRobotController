@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.HDriveConfig;
+import org.firstinspires.ftc.teamcode.old.y22powerplay.config.HDriveConfig;
 
 //@Autonomous
 public class AutoTimeBased extends OpMode {

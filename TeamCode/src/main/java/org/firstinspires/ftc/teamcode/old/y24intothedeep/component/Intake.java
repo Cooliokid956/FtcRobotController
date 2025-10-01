@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.component;
+package org.firstinspires.ftc.teamcode.old.y24intothedeep.component;
 
-import org.firstinspires.ftc.teamcode.config.IntakeConfig;
+import org.firstinspires.ftc.teamcode.old.y24intothedeep.config.IntakeConfig;
 
 public class Intake {
     public IntakeConfig config = new IntakeConfig();
