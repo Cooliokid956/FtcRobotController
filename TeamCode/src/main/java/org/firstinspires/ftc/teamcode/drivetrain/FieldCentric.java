@@ -21,7 +21,6 @@ public class FieldCentric extends LinearOpMode {
     IMU imu;
 
     public void runOpMode() {
-        telemetry.speak("six and seven");
         Robot robot = new Robot();
         robot.init(hardwareMap, this);
         imu = robot.getImu();
@@ -61,8 +60,10 @@ public class FieldCentric extends LinearOpMode {
 //                backLeftPower /= denominator;
 //                backRightPower /= denominator;
 //            }
-
-        robot.drive(true);
+        while(opModeIsActive()) {
+            robot.drive(true);
+            //code to move mechanisms
+        }
         //}
     }
 }

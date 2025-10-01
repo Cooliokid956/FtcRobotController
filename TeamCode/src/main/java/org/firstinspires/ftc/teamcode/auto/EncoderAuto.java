@@ -40,25 +40,22 @@ public class EncoderAuto extends LinearOpMode {
     public void runOpMode() {
         telemetry.speak("six and seven");
         robot.init(hardwareMap, this);
-
-        while (opModeIsActive()) {
-            flm = hardwareMap.get(DcMotorEx.class, "fl");
-            frm = hardwareMap.get(DcMotorEx.class, "fr");
-            blm = hardwareMap.get(DcMotorEx.class, "bl");
-            brm = hardwareMap.get(DcMotorEx.class, "br");
-            telemetry.addData("Status", "Initialized");
-            telemetry.addData("Starting at", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
-            telemetry.update();
-            waitForStart();
-            runtime.reset();
-            //Autonomous Path Here
-            robot.encoderDrive(DRIVE_SPEED, 12, 12, 12, 12, 4.0);//forward
-            robot.encoderDrive(TURN_SPEED, 12, 0, 0, -12, 4.0);//turn right
-            robot.encoderDrive(DRIVE_SPEED, 24, 24, 24, 24, 4.0);//forward
-            robot.encoderDrive(DRIVE_SPEED, 0, 12, -12, 0, 4.0);//turn lefts
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-            sleep(1000);  // pause to display final telemetry message.
-        }
+        flm = hardwareMap.get(DcMotorEx.class, "fl");
+        frm = hardwareMap.get(DcMotorEx.class, "fr");
+        blm = hardwareMap.get(DcMotorEx.class, "bl");
+        brm = hardwareMap.get(DcMotorEx.class, "br");
+        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Starting at", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
+        telemetry.update();
+        waitForStart();
+        runtime.reset();
+        //Autonomous Path Here
+        robot.encoderDrive(DRIVE_SPEED, 12, 12, 12, 12, 4.0);//forward
+        robot.encoderDrive(TURN_SPEED, 12, 0, 0, -12, 4.0);//turn right
+        robot.encoderDrive(DRIVE_SPEED, 24, 24, 24, 24, 4.0);//forward
+        robot.encoderDrive(DRIVE_SPEED, 0, 12, -12, 0, 4.0);//turn lefts
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);  // pause to display final telemetry message.
     }
 }

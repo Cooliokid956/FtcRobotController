@@ -69,81 +69,82 @@ public class Robot {
 
     }
     public void drive(boolean fieldCentric) {
+        opMode.telemetry.speak("six and seven");
         double max;
         double frontLeftPower;
         double frontRightPower;
         double backLeftPower;
         double backRightPower;
         double speedMultiplier;
-        while(opMode.opModeIsActive()) {
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? -opMode.gamepad1.left_stick_y:0;//Makes it easier to drive lateral
-            double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? opMode.gamepad1.left_stick_x:0;//Makes it easier to drive straight
-            double rx = opMode.gamepad1.right_stick_x;
-            if(fieldCentric) {
-                if(opMode.gamepad1.aWasReleased()) {
-                    imu.resetYaw();
-                    botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-                }
-                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-                double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-                frontLeftPower = rotY + rotX + rx;
-                //double frontRightPower = rotY - rotX - rx;
-                frontRightPower = rotY - rotX + rx;
-                // double backLeftPower = rotY - rotX + rx;
-                backLeftPower = rotY - rotX - rx;
-                backRightPower = rotY + rotX - rx;
+        //while(opMode.opModeIsActive()) {
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? -opMode.gamepad1.left_stick_y:0;//Makes it easier to drive lateral
+        double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? opMode.gamepad1.left_stick_x:0;//Makes it easier to drive straight
+        double rx = opMode.gamepad1.right_stick_x;
+        if(fieldCentric) {
+            if(opMode.gamepad1.aWasReleased()) {
+                imu.resetYaw();
+                botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            }
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            frontLeftPower = rotY + rotX + rx;
+            //double frontRightPower = rotY - rotX - rx;
+            frontRightPower = rotY - rotX + rx;
+            // double backLeftPower = rotY - rotX + rx;
+            backLeftPower = rotY - rotX - rx;
+            backRightPower = rotY + rotX - rx;
 
-                //max =  Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1); works but over-normalizes
-            } else {
+            //max =  Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1); works but over-normalizes
+        } else {
 
-                double axial = y;
-                double lateral = x;
-                double yaw = rx;
-                frontLeftPower = axial + lateral + yaw;
+            double axial = y;
+            double lateral = x;
+            double yaw = rx;
+            frontLeftPower = axial + lateral + yaw;
 //            double frontRightPower = axial - lateral - yaw;
-                frontRightPower = axial - lateral + yaw;
+            frontRightPower = axial - lateral + yaw;
 //            double backLeftPower = axial - lateral - yaw;
-                backLeftPower = axial - lateral - yaw;
-                backRightPower = axial + lateral - yaw;
-            }
-            max = Math.max(1.0, Math.abs(frontLeftPower));
-            max = Math.max(max, Math.abs(frontRightPower));
-            max = Math.max(max, Math.abs(backLeftPower));
-            max = Math.max(max, Math.abs(backRightPower));
-            speedMultiplier = 1.0 - (opMode.gamepad1.right_trigger * 0.7);
-            if(max > 1.0) {
-                frontLeftPower /= max;
-                frontRightPower /= max;
-                backLeftPower /= max;
-                backRightPower /= max;
-            }
-            frontLeftPower *= speedMultiplier;
-            frontRightPower *= speedMultiplier;
-            backLeftPower *= speedMultiplier;
-            backRightPower *= speedMultiplier;
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
+            backLeftPower = axial - lateral - yaw;
+            backRightPower = axial + lateral - yaw;
+        }
+        max = Math.max(1.0, Math.abs(frontLeftPower));
+        max = Math.max(max, Math.abs(frontRightPower));
+        max = Math.max(max, Math.abs(backLeftPower));
+        max = Math.max(max, Math.abs(backRightPower));
+        speedMultiplier = 1.0 - (opMode.gamepad1.right_trigger * 0.7);
+        if(max > 1.0) {
+            frontLeftPower /= max;
+            frontRightPower /= max;
+            backLeftPower /= max;
+            backRightPower /= max;
+        }
+        frontLeftPower *= speedMultiplier;
+        frontRightPower *= speedMultiplier;
+        backLeftPower *= speedMultiplier;
+        backRightPower *= speedMultiplier;
+        // Uncomment the following code to test your motor directions.
+        // Each button should make the corresponding motor run FORWARD.
+        //   1) First get all the motors to take to correct positions on the robot
+        //      by adjusting your Robot Configuration if necessary.
+        //   2) Then make sure they run in the correct direction by modifying the
+        //      the setDirection() calls above.
+        // Once the correct motors move in the correct direction re-comment this code.
 //            frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
 //            backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
 //            frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
 //            backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
 
-            setMotorSpeed(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-            opMode.telemetry.addData("Bot Heading:", botHeading);
-            opMode.telemetry.addData("Gamepad(Left V, Left H, Right H):",y + " " + x + " " + rx);
-            opMode.telemetry.addData("Status", "Run Time: " + runtime.toString());
-            opMode.telemetry.addData("Speed Multiplier: ", speedMultiplier);
-            opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
-            opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-            opMode.telemetry.update();
+        setMotorSpeed(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+        opMode.telemetry.addData("Bot Heading:", botHeading);
+        opMode.telemetry.addData("Gamepad(Left V, Left H, Right H):",y + " " + x + " " + rx);
+        opMode.telemetry.addData("Status", "Run Time: " + runtime.toString());
+        opMode.telemetry.addData("Speed Multiplier: ", speedMultiplier);
+        opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
+        opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+        opMode.telemetry.update();
 
-        }
+        //}
     }
     public void encoderDrive(double speed, double frontLeftInches, double frontRightInches, double backLeftInches, double backRightInches, double timeout) {
         encoderReset();

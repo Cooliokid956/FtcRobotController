@@ -15,7 +15,6 @@ public class RobotCentric extends LinearOpMode {
     DcMotorEx brm;
 
     public void runOpMode() {
-        telemetry.speak("six and seven");
         Robot robot = new Robot();
         robot.init(hardwareMap, this);
         flm = hardwareMap.get(DcMotorEx.class, "fl");
@@ -27,6 +26,9 @@ public class RobotCentric extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();
-        robot.drive(false);
+        while(opModeIsActive()) {
+            robot.drive(false);
+            //code to move mechanisms
+        }
     }
 }

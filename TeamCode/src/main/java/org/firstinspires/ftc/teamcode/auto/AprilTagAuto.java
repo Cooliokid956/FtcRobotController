@@ -36,7 +36,7 @@ public class AprilTagAuto extends LinearOpMode {
         telemetry.speak("six and seven");
         Robot robot = new Robot();
         robot.init(hardwareMap, this);
-
+        boolean navigation;
         while (opModeIsActive()) {
             flm = hardwareMap.get(DcMotorEx.class, "fl");
             frm = hardwareMap.get(DcMotorEx.class, "fr");
@@ -49,10 +49,10 @@ public class AprilTagAuto extends LinearOpMode {
 //        frm.setDirection(DcMotor.Direction.FORWARD);
 //        brm.setDirection(DcMotor.Direction.REVERSE);
             //new| have to turn bot around
-            flm.setDirection(DcMotor.Direction.REVERSE);//Motor flipped for some reason
-            blm.setDirection(DcMotor.Direction.FORWARD);
-            frm.setDirection(DcMotor.Direction.REVERSE);//Motors flipped; have to keep consistent
-            brm.setDirection(DcMotor.Direction.REVERSE);
+//            flm.setDirection(DcMotor.Direction.REVERSE);//Motor flipped for some reason
+//            blm.setDirection(DcMotor.Direction.FORWARD);
+//            frm.setDirection(DcMotor.Direction.REVERSE);//Motors flipped; have to keep consistent
+//            brm.setDirection(DcMotor.Direction.REVERSE);
             WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
             aprilTagProcesor = AprilTagProcessor.easyCreateWithDefaults();
             visionPortal = VisionPortal.easyCreateWithDefaults(webcamName, aprilTagProcesor);
@@ -86,7 +86,10 @@ public class AprilTagAuto extends LinearOpMode {
                     }
                 }
                 if(side == Tag.RED || side == Tag.BLUE) {
-                    
+                    navigation = true;
+                }
+                if(tag == null && side == null && currentDetections.isEmpty()) {
+                    //code to find tag and reposition according to the next pose
                 }
                 currentDetections.clear();
             }
