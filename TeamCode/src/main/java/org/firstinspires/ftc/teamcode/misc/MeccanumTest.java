@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.misc;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.MecanumConfig;
 
-//@TeleOp
+@TeleOp(name = "Meccanum Motor Test")
 public class MeccanumTest extends OpMode {
     MecanumConfig robot = new MecanumConfig();
 

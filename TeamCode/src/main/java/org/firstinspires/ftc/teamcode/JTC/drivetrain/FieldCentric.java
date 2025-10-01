@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.JTC.Robot;
 
-@TeleOp(name = "FieldCentric", group = "OpModes")
+@TeleOp(name = "FieldCentric", group = "OpModes (JTC)")
 public class FieldCentric extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotorEx flm;

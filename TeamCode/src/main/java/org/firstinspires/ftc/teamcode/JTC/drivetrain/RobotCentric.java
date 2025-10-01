@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.JTC.Robot;
 
-@TeleOp(name = "RobotCentric", group = "OpModes")
+@TeleOp(name = "RobotCentric", group = "OpModes (JTC)")
 public class RobotCentric extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotorEx flm;

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.lib.Manual;
 
-@TeleOp
+@TeleOp(name = "Kart Mode", group = "Recreational")
 public class KartMode extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Manual manual = new Manual(
@@ -74,9 +74,8 @@ public class KartMode extends OpMode {
             LOW_BOOST = generate_blinker(0, 1, .8, .6, 300, 0.5),
             MED_BOOST = generate_blinker(1, .5, 0, .6, 300, 0.5),
             MAX_BOOST = generate_blinker(1, 0, .8, .6, 300, 0.5),
-            LIGHT_OFF = new Gamepad.LedEffect.Builder().addStep(0, 0, 0, 10).build();
-
-    Gamepad.LedEffect currEffect;
+            LIGHT_OFF = new Gamepad.LedEffect.Builder().addStep(0, 0, 0, 10).build(),
+            currEffect;
     void set_led_effect(Gamepad gp, Gamepad.LedEffect effect) {
         if (currEffect != effect) {
             gp.runLedEffect(effect);
@@ -85,7 +84,6 @@ public class KartMode extends OpMode {
     }
 
     float power, accel, rotOffsetDrift, rotOffsetTurn, rotOffset, rot;
-
     int drift; float driftMag;
 
     @Override

@@ -64,9 +64,9 @@ public class MecanumDrive {
         telemetry.addData("x", lrPower);
         telemetry.addData("turn", turn);
         telemetry.addLine();
-        telemetry.addData(":", "%4.2f-%4.2f ::", config.flMotor.getPower(), config.frMotor.getPower());
-        telemetry.addData(":", "|-----| ::");
-        telemetry.addData(":", "|-----| ::");
-        telemetry.addData(":", "%4.2f-%4.2f ::", config.blMotor.getPower(), config.brMotor.getPower());
+        telemetry.addData(":", "%4.2f-%4.2f : :", config.flMotor.getPower(), config.frMotor.getPower());
+        telemetry.addData(":", "|-------------| : :");
+        telemetry.addData(":", "|-------------| : :");
+        telemetry.addData(":", "%4.2f-%4.2f : :", config.blMotor.getPower(), config.brMotor.getPower());
     }
 }
