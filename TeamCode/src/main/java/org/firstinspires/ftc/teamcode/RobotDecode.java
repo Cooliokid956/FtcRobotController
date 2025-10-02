@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.component.ArtifactIntake;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 @TeleOp(name = "TOOTY'25 (Decode)", group = "Competitive")
 public class RobotDecode extends OpMode {
-    MecanumDrive drive  = new MecanumDrive(); // Drive
+    MecanumDrive drive = new MecanumDrive();
+    ArtifactIntake intake = new ArtifactIntake();
 
     @Override
     public void init() { drive.config.init(hardwareMap); }
@@ -22,6 +24,6 @@ public class RobotDecode extends OpMode {
         telemetry.addData("lt", gamepad1.left_trigger);
         telemetry.addData("rt", gamepad1.right_trigger);
 
-        // -  awaiting further structures to program  - //
+        intake.toggle(gamepad1.cross);
     }
 }
