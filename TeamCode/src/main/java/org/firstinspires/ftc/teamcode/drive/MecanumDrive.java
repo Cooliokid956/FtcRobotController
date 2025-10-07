@@ -40,7 +40,7 @@ public class MecanumDrive {
                                 : 0,
                 fwdPower = -gamepad.left_stick_y,
                 turn = gamepad.right_stick_x,
-                max = 1.0;
+                max;
 
         fwdPower *= magnitude; lrPower *= magnitude;
 
@@ -54,7 +54,7 @@ public class MecanumDrive {
         max = Math.max(Math.abs((fwdPower + turn + lrPower)),
               Math.max(Math.abs((fwdPower + turn - lrPower)),
               Math.max(Math.abs((fwdPower - turn - lrPower)),
-              Math.max(Math.abs((fwdPower - turn + lrPower)), max))));
+              Math.max(Math.abs((fwdPower - turn + lrPower)), 1))));
         config.flMotor.setPower((fwdPower + turn + lrPower) / max);
         config.blMotor.setPower((fwdPower + turn - lrPower) / max);
         config.frMotor.setPower((fwdPower - turn - lrPower) / max);
