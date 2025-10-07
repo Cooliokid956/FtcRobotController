@@ -17,51 +17,39 @@ public class MecanumDrive {
 
     boolean turbo = false, swapDir = true;
 
-    public void toggle_turbo(boolean turbo) {
-        this.turbo = turbo;
-    }
-    public void toggle_turbo() {
-        this.turbo = !this.turbo;
-    }
+    public void toggle_turbo(boolean turbo) { this.turbo = turbo; }
+    public void toggle_turbo() { this.turbo = !this.turbo; }
 
-    public void toggle_direction(boolean forwards) {
-        this.swapDir = forwards;
-    }
-    public void toggle_direction() {
-        this.swapDir = !this.swapDir;
-    }
+    public void toggle_direction(boolean forwards) { this.swapDir = forwards; }
+    public void toggle_direction() { this.swapDir = !this.swapDir; }
 
     public void drive(Gamepad gamepad, Telemetry telemetry) {
         double
                 magnitude = turbo ? 1 : .5,
-                lrPower =
-                        Math.abs(gamepad.left_stick_x) > 0.04
+                forward = -gamepad.left_stick_y,
+                strafe = Math.abs(gamepad.left_stick_x) > 0.04
                                 ? gamepad.left_stick_x
                                 : 0,
-                fwdPower = -gamepad.left_stick_y,
                 turn = gamepad.right_stick_x,
                 max;
 
-        fwdPower *= magnitude; lrPower *= magnitude;
+        forward *= magnitude; strafe *= magnitude;
+        if (swapDir) { forward *= -1; strafe *= -1; }
 
         if (gamepad. backWasPressed()) toggle_turbo();
         if (gamepad.startWasPressed()) toggle_direction();
 
-        if (swapDir) {
-            fwdPower *= -1; lrPower *= -1;
-        }
+        max = Math.max(Math.abs((forward + turn + strafe)),
+              Math.max(Math.abs((forward + turn - strafe)),
+              Math.max(Math.abs((forward - turn - strafe)),
+              Math.max(Math.abs((forward - turn + strafe)), 1))));
+        config.flMotor.setPower((forward + turn + strafe) / max);
+        config.blMotor.setPower((forward + turn - strafe) / max);
+        config.frMotor.setPower((forward - turn - strafe) / max);
+        config.brMotor.setPower((forward - turn + strafe) / max);
 
-        max = Math.max(Math.abs((fwdPower + turn + lrPower)),
-              Math.max(Math.abs((fwdPower + turn - lrPower)),
-              Math.max(Math.abs((fwdPower - turn - lrPower)),
-              Math.max(Math.abs((fwdPower - turn + lrPower)), 1))));
-        config.flMotor.setPower((fwdPower + turn + lrPower) / max);
-        config.blMotor.setPower((fwdPower + turn - lrPower) / max);
-        config.frMotor.setPower((fwdPower - turn - lrPower) / max);
-        config.brMotor.setPower((fwdPower - turn + lrPower) / max);
-
-        telemetry.addData("y", fwdPower);
-        telemetry.addData("x", lrPower);
+        telemetry.addData("y", forward);
+        telemetry.addData("x", strafe);
         telemetry.addData("turn", turn);
         telemetry.addLine();
         telemetry.addData(":", "%4.2f-%4.2f : :", config.flMotor.getPower(), config.frMotor.getPower());
