@@ -5,13 +5,23 @@ import org.firstinspires.ftc.teamcode.config.ArtifactIntakeConfig;
 public class ArtifactIntake {
     public ArtifactIntakeConfig config = new ArtifactIntakeConfig();
 
-    boolean running;
-    public void toggle() {
-        running = !running;
+    boolean intakeRunning;
+    public void toggle_intake() {
+        intakeRunning = !intakeRunning;
+        config.intake.setPower(intakeRunning ? 1 : 0);
+    }
+    public void toggle_intake(boolean running) {
+        this.intakeRunning = running;
         config.intake.setPower(running ? 1 : 0);
     }
-    public void toggle(boolean running) {
-        this.running = running;
+
+    boolean flywheelRunning;
+    public void toggle_flywheel() {
+        flywheelRunning = !flywheelRunning;
+        config.intake.setPower(flywheelRunning ? 1 : 0);
+    }
+    public void toggle_flywheel(boolean running) {
+        this.flywheelRunning = running;
         config.intake.setPower(running ? 1 : 0);
     }
 }
