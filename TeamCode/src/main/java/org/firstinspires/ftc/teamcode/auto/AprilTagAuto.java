@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
-
+@Disabled
 @Autonomous(name = "AprilTag", group = "OpModes")
 public class AprilTagAuto extends LinearOpMode {
     public enum Tag {
@@ -59,6 +60,7 @@ public class AprilTagAuto extends LinearOpMode {
             telemetry.addData("Status", "Initialized");
             Tag tag = null;
             Tag side = null;
+            AprilTagDetection navTag;
             telemetry.update();
             waitForStart();
             runtime.reset();
@@ -68,7 +70,7 @@ public class AprilTagAuto extends LinearOpMode {
                 for(AprilTagDetection detection : currentDetections) {
                     switch(detection.id) {
                         case 20:
-                            side = Tag.BLUE;
+                            if(side == null) side = Tag.BLUE;
                             break;
                         case 21:
                             tag = Tag.GPP;
@@ -80,7 +82,7 @@ public class AprilTagAuto extends LinearOpMode {
                             tag = Tag.PPG;
                             break;
                         case 24:
-                            side = Tag.RED;
+                            if(side == null) side = Tag.RED;
                             break;
                         default:
                     }

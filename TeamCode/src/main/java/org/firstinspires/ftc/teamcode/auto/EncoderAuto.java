@@ -50,10 +50,16 @@ public class EncoderAuto extends LinearOpMode {
         waitForStart();
         runtime.reset();
         //Autonomous Path Here
-        robot.encoderDrive(DRIVE_SPEED, 12, 12, 12, 12, 20.0);//forward
-        robot.encoderDrive(TURN_SPEED, 12, 0, 0, -12, 20.0);//turn right
-        robot.encoderDrive(DRIVE_SPEED, 24, 24, 24, 24, 20.0);//forward
-        robot.encoderDrive(DRIVE_SPEED, 0, 12, -12, 0, 20.0);//turn lefts
+        /*
+        robot.encoderDrive(DRIVE_SPEED, 12, -12, -12, 12, 4.0);//move right
+        sleep(350);
+        robot.encoderDrive(DRIVE_SPEED, 12, 12, 12, 12, 4.0);//forward
+        sleep(350);
+        robot.encoderDrive(TURN_SPEED, 12, -12, 12, -12, 4.0);//turn right
+        sleep(350);
+        robot.encoderDrive(TURN_SPEED,-12, 12, -12, 12, 4.0);//turn left
+        */
+        robot.encoderDrive(DRIVE_SPEED, 18, -18, -18, 18, 6.0);//Drives out of the box for 3 points
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
