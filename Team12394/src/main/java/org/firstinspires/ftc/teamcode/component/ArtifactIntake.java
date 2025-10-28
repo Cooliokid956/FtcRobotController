@@ -18,10 +18,10 @@ public class ArtifactIntake {
     boolean flywheelRunning;
     public void toggle_flywheel() {
         flywheelRunning = !flywheelRunning;
-        config.intake.setPower(flywheelRunning ? 1 : 0);
+        config.flywheel.setPower(flywheelRunning ? 1 : 0);
     }
     public void toggle_flywheel(boolean running) {
         this.flywheelRunning = running;
-        config.intake.setPower(running ? 1 : 0);
+        config.flywheel.setPower(running ? 1 : 0);
     }
 }

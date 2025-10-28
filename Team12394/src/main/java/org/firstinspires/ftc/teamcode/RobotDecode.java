@@ -12,7 +12,10 @@ public class RobotDecode extends OpMode {
     ArtifactIntake intake = new ArtifactIntake();
 
     @Override
-    public void init() { drive.config.init(hardwareMap); }
+    public void init() {
+        drive .config.init(hardwareMap);
+        intake.config.init(hardwareMap);
+    }
 
     @Override
     public void init_loop() { drive.manual.print(telemetry); }
