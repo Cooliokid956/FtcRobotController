@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -59,7 +58,8 @@ public class EncoderAuto extends LinearOpMode {
         sleep(350);
         robot.encoderDrive(TURN_SPEED,-12, 12, -12, 12, 4.0);//turn left
         */
-        robot.encoderDrive(DRIVE_SPEED, 18, -18, -18, 18, 6.0);//Drives out of the box for 3 points
+        robot.encoderDrive(DRIVE_SPEED, 12, -12, -12, 12, 4.0);//move right
+        robot.encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 6.0);//Drives out of the box for 3 points
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.

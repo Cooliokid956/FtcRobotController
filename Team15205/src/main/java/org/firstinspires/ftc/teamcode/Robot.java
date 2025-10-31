@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType.getMotorType;
-
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,16 +11,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
 
 public class Robot {
     private DcMotorEx flm;
     private DcMotorEx frm;
     private DcMotorEx blm;
     private DcMotorEx brm;
-//    DcMotorEx leftFW;
-//    DcMotorEx rightFW;
+    DcMotorEx leftFW;
+    DcMotorEx rightFW;
     private ElapsedTime runtime = new ElapsedTime();
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -54,11 +49,11 @@ public class Robot {
         brm = hwMap.get(DcMotorEx.class, "br");
         brm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-//        leftFW = hwMap.get(DcMotorEx.class, "lFW");
-//        leftFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//
-//        rightFW = hwMap.get(DcMotorEx.class, "rFW");
-//        rightFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFW = hwMap.get(DcMotorEx.class, "lFW");
+        leftFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        rightFW = hwMap.get(DcMotorEx.class, "rFW");
+        rightFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 //        flm.setDirection(DcMotor.Direction.REVERSE);
 //        blm.setDirection(DcMotor.Direction.REVERSE);
@@ -69,8 +64,8 @@ public class Robot {
         blm.setDirection(DcMotorEx.Direction.FORWARD);
         frm.setDirection(DcMotorEx.Direction.REVERSE);//Motors flipped; have to keep consistent
         brm.setDirection(DcMotorEx.Direction.REVERSE);
-//        leftFW.setDirection(DcMotorEx.Direction.REVERSE);
-//        rightFW.setDirection(DcMotorEx.Direction.FORWARD);
+        leftFW.setDirection(DcMotorEx.Direction.REVERSE);
+        rightFW.setDirection(DcMotorEx.Direction.FORWARD);
         ticksPerRotation = flm.getMotorType().getTicksPerRev();
 
         imu = hwMap.get(IMU.class, "imu");
@@ -87,8 +82,8 @@ public class Robot {
         double speedMultiplier;
         if(opMode.opModeIsActive()) {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? -opMode.gamepad1.left_stick_y:0;//Makes it easier to drive lateral
-        double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? opMode.gamepad1.left_stick_x:0;//Makes it easier to drive straight
+        double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_y) > 0.90 ? Math.signum(-opMode.gamepad1.left_stick_y):-opMode.gamepad1.left_stick_y:0;//Makes it easier to drive lateral
+        double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_x) > 0.90 ? Math.signum(opMode.gamepad1.left_stick_y):opMode.gamepad1.left_stick_x :0;//Makes it easier to drive straight
         double rx = opMode.gamepad1.right_stick_x;
         if(fieldCentric) {// in reference to the field
             if(opMode.gamepad1.aWasReleased()) {//a is x
@@ -153,7 +148,7 @@ public class Robot {
 
         }
     }
-    public void encoderDrive(double speed, double frontLeftInches, double frontRightInches, double backLeftInches, double backRightInches, double timeout) {
+    public void encoderDrive(double speed, int frontLeftInches, int frontRightInches, int backLeftInches, int backRightInches, double timeout) {
         //if motors acting wonky refer to their direction
         encoderReset();
         int newFrontLeftTarget;
@@ -190,7 +185,7 @@ public class Robot {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while(opMode.opModeIsActive() && (runtime.seconds() < timeout) && (flm.isBusy() || frm.isBusy() || blm.isBusy() || brm.isBusy())) {
+            while(opMode.opModeIsActive() && (runtime.seconds() < timeout) && (flm.isBusy() && frm.isBusy() && blm.isBusy() && brm.isBusy())) {
                 //Display to driver
                 opMode.telemetry.addData("Running to", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
                 opMode.telemetry.addData("Currently at ", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
@@ -219,10 +214,10 @@ public class Robot {
         blm.setPower(blp);
         brm.setPower(brp);
     }
-//    public void controlFlywheels(double powerLFW, double powerRFW) {
-//        leftFW.setPower(powerLFW);
-//        rightFW.setPower(powerRFW);
-//    }
+    public void controlFlywheels(double powerLFW, double powerRFW) {
+        leftFW.setPower(powerLFW);
+        rightFW.setPower(powerRFW);
+    }
     public double getTicksPerRotation() {
         return ticksPerRotation;
     }
