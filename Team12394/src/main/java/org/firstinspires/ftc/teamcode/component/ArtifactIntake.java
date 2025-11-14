@@ -15,13 +15,13 @@ public class ArtifactIntake {
         config.intake.setPower(running ? 1 : 0);
     }
 
-    boolean flywheelRunning;
-    public void toggle_flywheel() {
-        flywheelRunning = !flywheelRunning;
-        config.flywheel.setPower(flywheelRunning ? 1 : 0);
+    boolean transportRunning;
+    public void toggle_transport() {
+        transportRunning = !transportRunning;
+        config.transport.setPower(transportRunning ? 1 : 0);
     }
-    public void toggle_flywheel(boolean running) {
-        this.flywheelRunning = running;
-        config.flywheel.setPower(running ? 1 : 0);
+    public void toggle_transport(boolean running) {
+        this.transportRunning = running;
+        config.transport.setPower(running ? 1 : 0);
     }
 }
