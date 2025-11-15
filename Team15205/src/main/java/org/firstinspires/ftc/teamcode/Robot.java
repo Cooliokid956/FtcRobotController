@@ -89,14 +89,14 @@ public class Robot {
 //        frm.setDirection(DcMotor.Direction.FORWARD);
 //        brm.setDirection(DcMotor.Direction.REVERSE);
         //new| have to turn bot around
-        flm.setDirection(DcMotorEx.Direction.REVERSE);//Motor flipped for some reason
-        blm.setDirection(DcMotorEx.Direction.FORWARD);
+        flm.setDirection(DcMotorEx.Direction.FORWARD);//Motor flipped for some reason
+        blm.setDirection(DcMotorEx.Direction.REVERSE);
         frm.setDirection(DcMotorEx.Direction.REVERSE);//Motors flipped; have to keep consistent
         brm.setDirection(DcMotorEx.Direction.REVERSE);
-        leftFW.setDirection(DcMotorEx.Direction.REVERSE);
-        rightFW.setDirection(DcMotorEx.Direction.FORWARD);
+        leftFW.setDirection(DcMotorEx.Direction.FORWARD);
+        rightFW.setDirection(DcMotorEx.Direction.REVERSE);
         intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        pushServo1.setDirection(CRServo.Direction.FORWARD);
+        pushServo1.setDirection(CRServo.Direction.REVERSE);
         pushServo2.setDirection(CRServo.Direction.FORWARD);
         centerPushServo.setDirection(CRServo.Direction.FORWARD);
         ticksPerRotation = 537.6;
@@ -137,12 +137,12 @@ public class Robot {
             double axial = y;
             double lateral = x;
             double yaw = rx;//vector calculations
-            frontLeftPower = axial + yaw - lateral;
+            frontLeftPower = axial - lateral - yaw;
 //            double frontRightPower = axial - lateral - yaw;
-            frontRightPower = axial - yaw + lateral;
+            frontRightPower = axial + lateral + yaw;
 //            double backLeftPower = axial - lateral - yaw;
-            backLeftPower = axial - yaw - lateral;
-            backRightPower = axial + yaw + lateral;
+            backLeftPower = axial - lateral + yaw;
+            backRightPower = axial + lateral - yaw;
         }
         max = Math.max(1.0, Math.abs(frontLeftPower));
         max = Math.max(max, Math.abs(frontRightPower));
