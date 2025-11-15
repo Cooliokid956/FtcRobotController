@@ -23,6 +23,10 @@ public class AprilTagAuto extends LinearOpMode {
         BLUE,
         RED
     }
+    public enum Nav {
+        RED,
+        BLUE
+    }
     private ElapsedTime runtime = new ElapsedTime();
     private AprilTagProcessor aprilTagProcesor;
     private VisionPortal visionPortal;
@@ -35,7 +39,7 @@ public class AprilTagAuto extends LinearOpMode {
         telemetry.speak("six and seven");
         Robot robot = new Robot();
         robot.init(hardwareMap, this);
-        boolean navigation = false;
+        Nav navigation = null;
         while (opModeIsActive()) {
             flm = hardwareMap.get(DcMotorEx.class, "fl");
             frm = hardwareMap.get(DcMotorEx.class, "fr");
@@ -85,21 +89,44 @@ public class AprilTagAuto extends LinearOpMode {
                         default:
                     }
                 }
-                if(side == Tag.RED || side == Tag.BLUE) {
-                    navigation = true;
+                ////depending on the use change this
+                if(side == Tag.RED) {
+                    navigation = Nav.RED;
+                } else if (side == Tag.BLUE) {
+                    navigation = Nav.BLUE;
                 }
-                if(tag == null && side == null && currentDetections.isEmpty() && !navigation) {
+                if(tag == null && side == null && currentDetections.isEmpty() && navigation == null) {
                     //code to find tag and reposition according to the next pose
                     //turns around slowly
+                    //temporarily without rotating camera
                     robot.setMotorSpeed(0.3, -0.3, 0.3,-0.3 );
-                }
+                    /*
+                        With rotating motor however
+                        need to set a variable that keeps track of yaw based on the servo's position(Either using a continuos
+                        motor or one that keeps track of degrees that has limits but needs logic.)
+                        and use that to estimate the robots coordinates on the field and turn it
+                     */
+                } else if(navigation == Nav.BLUE) {
+                    // code for doing what you want on blue side
+                    /*
+                    For right now I want to move backwards along the line so need to orient with tag
+                     */
+                } else if(navigation == Nav.RED) {
+                    //code for doing what you want on red side
+                    /*
+                     For right now I want to move backwards along the line so need to orient with tag
+                     */
+                } // can alter these and change the sequence with linear OpMode and using both the red and blue april tags for complex navigations
+                //try to use encoder movement for precision or roadrunner to save time when build is finished
+                //when you make sure that the robot is oriented, at the right distance, and has three balls
+                //try to have scoring code outside of main logic for compatibility/general use
 
-                currentDetections.clear();
+                //currentDetections.clear();
             }
         }
     }
     // find yaw offset of april tag
     // move the bots heading via imu to match the yaw of april tag from within +/- 10 degrees
-    //move from heading of robot to specifc coordinates in relation to april tag
+    //move from heading of robot to specific coordinates in relation to april tag
     //if april tag isn't found rotate the robot slowly until it is
 }

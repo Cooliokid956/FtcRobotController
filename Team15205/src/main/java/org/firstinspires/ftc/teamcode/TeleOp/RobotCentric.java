@@ -35,8 +35,9 @@ public class RobotCentric extends LinearOpMode {
         telemetry.speak("six and seven");
         while(opModeIsActive()) {
             robot.drive(false);
-            if(usingTrigger && gamepad1.left_trigger > 0) {
-                robot.controlFlywheels(gamepad1.left_trigger, gamepad1.left_trigger);
+            if(usingTrigger && gamepad1.right_trigger > 0) {robot.controlFlywheels(-gamepad1.right_trigger, -gamepad1.right_trigger);}
+            else if(usingTrigger && gamepad1.left_trigger > 0) {
+                robot.controlFlywheels(gamepad1.left_trigger/2, gamepad1.left_trigger/2);
             } else if (gamepad1.left_bumper && !lBumper) {
                 usingTrigger = false;
                 if (runtime.seconds() - lastTime <= 0.35) {
@@ -54,10 +55,10 @@ public class RobotCentric extends LinearOpMode {
                     lastTime = runtime.seconds();
                     robot.controlFlywheels(1, 1);
                 }
-            } else if(gamepad1.left_trigger != 0) {usingTrigger = true;}
+            } else if(gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {usingTrigger = true;}
+            else if(usingTrigger){robot.controlFlywheels(0, 0);}
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);
-
             telemetry.update();
             //code to move mechanisms
         }

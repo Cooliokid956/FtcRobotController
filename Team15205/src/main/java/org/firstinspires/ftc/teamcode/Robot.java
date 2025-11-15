@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,6 +21,11 @@ public class Robot {
     private DcMotorEx brm;
     DcMotorEx leftFW;
     DcMotorEx rightFW;
+    DcMotorEx intakeMotor;
+    CRServo centerPushServo;
+    CRServo pushServo1;
+    CRServo pushServo2;
+
     private ElapsedTime runtime = new ElapsedTime();
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -26,16 +33,32 @@ public class Robot {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 537.7 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 537.6;    // eg: GoBilda 5203 Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 3.77953 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * Math.PI);
+    static final double     COUNTS_PER_INCH         = ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI))/1.75;
 
     private double ticksPerRotation;
     private IMU imu;
     LinearOpMode opMode;
     public void init(HardwareMap hwMap, /*Optional<LinearOpMode> opMode*/LinearOpMode opMode) {
+        /*CONFIGURATION
+        MOTORS
+            CONTROL HUB
+            0:fr
+            1:fl
+            2:bl
+            3:br
+            EXPANSION HUB
+            0:intake
+            1:lFW
+            2:rFW
+        SERVOS
+            3:centerPushServo
+            4:pushServoL
+            5:pushServoR
+         */
         flm = hwMap.get(DcMotorEx.class, "fl");
         flm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         //this.opMode = opMode.orElse(null);
@@ -50,11 +73,17 @@ public class Robot {
         brm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         leftFW = hwMap.get(DcMotorEx.class, "lFW");
-        leftFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFW.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         rightFW = hwMap.get(DcMotorEx.class, "rFW");
-        rightFW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFW.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
+        intakeMotor = hwMap.get(DcMotorEx.class, "intake");
+        intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        centerPushServo = hwMap.get(CRServo.class, "centerPushServo");
+        pushServo1 = hwMap.get(CRServo.class, "pushServoL");
+        pushServo2 = hwMap.get(CRServo.class, "pushServoR");
 //        flm.setDirection(DcMotor.Direction.REVERSE);
 //        blm.setDirection(DcMotor.Direction.REVERSE);
 //        frm.setDirection(DcMotor.Direction.FORWARD);
@@ -66,10 +95,14 @@ public class Robot {
         brm.setDirection(DcMotorEx.Direction.REVERSE);
         leftFW.setDirection(DcMotorEx.Direction.REVERSE);
         rightFW.setDirection(DcMotorEx.Direction.FORWARD);
-        ticksPerRotation = flm.getMotorType().getTicksPerRev();
+        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        pushServo1.setDirection(CRServo.Direction.FORWARD);
+        pushServo2.setDirection(CRServo.Direction.FORWARD);
+        centerPushServo.setDirection(CRServo.Direction.FORWARD);
+        ticksPerRotation = 537.6;
 
         imu = hwMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
+        RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.DOWN);
         imu.initialize(new IMU.Parameters(RevOrientation));
 
     }
@@ -82,50 +115,50 @@ public class Robot {
         double speedMultiplier;
         if(opMode.opModeIsActive()) {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_y) > 0.90 ? Math.signum(-opMode.gamepad1.left_stick_y):-opMode.gamepad1.left_stick_y:0;//Makes it easier to drive lateral
-        double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_x) > 0.90 ? Math.signum(opMode.gamepad1.left_stick_y):opMode.gamepad1.left_stick_x :0;//Makes it easier to drive straight
+        double y = Math.abs(opMode.gamepad1.left_stick_y) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_y) > 0.90 ? Math.signum(-opMode.gamepad1.left_stick_y):-opMode.gamepad1.left_stick_y:0;//Makes it easier to drive perfectly lateral
+        double x = Math.abs(opMode.gamepad1.left_stick_x) > 0.05 ? Math.abs(opMode.gamepad1.left_stick_x) > 0.90 ? Math.signum(opMode.gamepad1.left_stick_x):opMode.gamepad1.left_stick_x :0;//Makes it easier to drive straight forward
         double rx = opMode.gamepad1.right_stick_x;
         if(fieldCentric) {// in reference to the field
-            if(opMode.gamepad1.aWasReleased()) {//a is x
-                imu.resetYaw();
-                botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            }
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+//            if(opMode.gamepad1.aWasReleased()) {//a is x
+//                imu.resetYaw();
+//                botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//            }
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);//used to calculate the rotation
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            frontLeftPower = rotY + rotX - rx;
+            frontLeftPower = rotY + rx - rotX;//vector calculations
             //double frontRightPower = rotY - rotX - rx;
-            frontRightPower = rotY - rotX + rx;
+            frontRightPower = rotY - rx + rotX;
             // double backLeftPower = rotY - rotX + rx;
-            backLeftPower = rotY - rotX - rx;
-            backRightPower = rotY + rotX + rx;
+            backLeftPower = rotY - rx - rotX;
+            backRightPower = rotY + rx + rotX;
 
             //max =  Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1); works but over-normalizes
         } else {
             double axial = y;
             double lateral = x;
-            double yaw = rx;
-            frontLeftPower = axial + lateral - yaw;
+            double yaw = rx;//vector calculations
+            frontLeftPower = axial + yaw - lateral;
 //            double frontRightPower = axial - lateral - yaw;
-            frontRightPower = axial - lateral + yaw;
+            frontRightPower = axial - yaw + lateral;
 //            double backLeftPower = axial - lateral - yaw;
-            backLeftPower = axial - lateral - yaw;
-            backRightPower = axial + lateral + yaw;
+            backLeftPower = axial - yaw - lateral;
+            backRightPower = axial + yaw + lateral;
         }
         max = Math.max(1.0, Math.abs(frontLeftPower));
         max = Math.max(max, Math.abs(frontRightPower));
         max = Math.max(max, Math.abs(backLeftPower));
         max = Math.max(max, Math.abs(backRightPower));
-        speedMultiplier = 1.0 - (opMode.gamepad1.right_trigger * 0.7);
-        if(max > 1.0) {
+//        speedMultiplier = 1.0 - (opMode.gamepad1.right_trigger * 0.7);// controls speed with right trigger
+        if(max > 1.0) {//Evens out motor powers
             frontLeftPower /= max;
             frontRightPower /= max;
             backLeftPower /= max;
             backRightPower /= max;
         }
-        frontLeftPower *= speedMultiplier;
-        frontRightPower *= speedMultiplier;
-        backLeftPower *= speedMultiplier;
-        backRightPower *= speedMultiplier;
+//        frontLeftPower *= speedMultiplier; set to something else
+//        frontRightPower *= speedMultiplier;
+//        backLeftPower *= speedMultiplier;
+//        backRightPower *= speedMultiplier;
         // Uncomment the following code to test your motor directions.
         // Each button should make the corresponding motor run FORWARD.
         //   1) First get all the motors to take to correct positions on the robot
@@ -142,10 +175,10 @@ public class Robot {
         opMode.telemetry.addData("Bot Heading:", botHeading);
         opMode.telemetry.addData("Gamepad(Left V, Left H, Right H):",y + " " + x + " " + rx);
         opMode.telemetry.addData("Status", "Run Time: " + runtime.toString());
-        opMode.telemetry.addData("Speed Multiplier: ", speedMultiplier);
+        //opMode.telemetry.addData("Speed Multiplier: ", speedMultiplier);
         opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
         opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-
+        opMode.telemetry.addData("y, x, rx", x + " " + y + " " + rx);
         }
     }
     public void encoderDrive(double speed, int frontLeftInches, int frontRightInches, int backLeftInches, int backRightInches, double timeout) {
@@ -197,10 +230,7 @@ public class Robot {
             frm.setPower(0);
             blm.setPower(0);
             brm.setPower(0);
-            flm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            frm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            blm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            brm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            encoderReset();
             opMode.sleep(250);
         }
     }
@@ -213,6 +243,20 @@ public class Robot {
         frm.setPower(frp);
         blm.setPower(blp);
         brm.setPower(brp);
+    }
+    public void controlIntake(double power) {
+        intakeMotor.setPower(power);
+    }
+    public void controlPushServos(double centerPower, double servo1Power, double servo2Power) {
+        if(centerPower != 67) {
+            centerPushServo.setPower(centerPower);
+        }
+        if(servo1Power != 67) {
+            pushServo1.setPower(servo1Power);
+        }
+        if(servo2Power != 67) {
+            pushServo2.setPower(servo2Power);
+        }
     }
     public void controlFlywheels(double powerLFW, double powerRFW) {
         leftFW.setPower(powerLFW);

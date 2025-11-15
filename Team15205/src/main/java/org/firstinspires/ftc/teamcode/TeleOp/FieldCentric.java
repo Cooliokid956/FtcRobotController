@@ -63,24 +63,34 @@ public class FieldCentric extends LinearOpMode {
             robot.drive(true);
             if(usingTrigger && gamepad1.left_trigger > 0) {
                 robot.controlFlywheels(gamepad1.left_trigger, gamepad1.left_trigger);
+                robot.controlPushServos(gamepad1.left_trigger, gamepad1.left_trigger, gamepad1.left_trigger);
             } else if (gamepad1.left_bumper && !lBumper) {
                 usingTrigger = false;
                 if (runtime.seconds() - lastTime <= 0.35) {
                     bumperPressCount++;
                     if (bumperPressCount == 3) {
                         robot.controlFlywheels(-1, -1);
+                        robot.controlPushServos(-1, -1, -1);
                         bumperPressCount = 0;
                         lastTime = -1.0;
                     } else {
                         lastTime = runtime.seconds();
                         robot.controlFlywheels(0, 0);
+                        robot.controlPushServos(0, 0, 0);
                     }
                 } else {
                     bumperPressCount = 1;
                     lastTime = runtime.seconds();
                     robot.controlFlywheels(1, 1);
+                    robot.controlPushServos(1, 1, 1);
                 }
             } else if(gamepad1.left_trigger != 0) {usingTrigger = true;}
+            if(gamepad1.circle) {
+                robot.controlIntake(1);
+            }
+            if(gamepad1.triangle) {
+                robot.controlIntake(-1);
+            }
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);
 
