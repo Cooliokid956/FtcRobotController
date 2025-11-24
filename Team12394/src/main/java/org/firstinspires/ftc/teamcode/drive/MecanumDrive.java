@@ -30,7 +30,7 @@ public class MecanumDrive {
                 strafe = Math.abs(gamepad.left_stick_x) > 0.04
                                 ? gamepad.left_stick_x
                                 : 0,
-                turn = gamepad.right_stick_x,
+                turn = gamepad.right_stick_x * 0.5,
                 max;
 
         forward *= magnitude; strafe *= magnitude;
