@@ -27,7 +27,12 @@ public class RobotDecode extends OpMode {
         telemetry.addData("lt", gamepad1.left_trigger);
         telemetry.addData("rt", gamepad1.right_trigger);
 
-        intake.toggle_intake(gamepad1.cross);
-        intake.toggle_transport(gamepad1.circle);
+        intake.toggle_intake(gamepad1.dpad_down);
+        intake.toggle_transport(gamepad1.left_bumper);
+        if (gamepad1.dpadUpWasPressed()) intake.toggle_flywheel();
+        intake.update_flywheel();
+
+        telemetry.addData("Flywheel", intake.config.flyL.getVelocity());
+        if (intake.flywheel_critical()) telemetry.addLine("CRITICAL!");
     }
 }

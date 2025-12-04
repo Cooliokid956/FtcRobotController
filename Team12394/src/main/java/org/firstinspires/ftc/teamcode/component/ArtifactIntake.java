@@ -5,23 +5,29 @@ import org.firstinspires.ftc.teamcode.config.ArtifactIntakeConfig;
 public class ArtifactIntake {
     public ArtifactIntakeConfig config = new ArtifactIntakeConfig();
 
-    boolean intakeRunning;
-    public void toggle_intake() {
-        intakeRunning = !intakeRunning;
-        config.intake.setPower(intakeRunning ? 1 : 0);
-    }
-    public void toggle_intake(boolean running) {
-        this.intakeRunning = running;
-        config.intake.setPower(running ? 1 : 0);
-    }
+    boolean intake, transport, flywheel;
 
-    boolean transportRunning;
-    public void toggle_transport() {
-        transportRunning = !transportRunning;
-        config.transport.setPower(transportRunning ? 1 : 0);
+    void _ti(boolean on) { intake = on; config.intake.setPower(on ? -1 : 0); }
+    public void toggle_intake() { _ti(!intake); }
+    public void toggle_intake(boolean running) { _ti(running); }
+
+    void _tt(boolean on) { transport = on; config.transport.setPower(on ? 1 : 0); }
+    public void toggle_transport() { _tt(!transport); }
+    public void toggle_transport(boolean running) { _tt(running); }
+
+    void _tf(boolean on) { flywheel = on; }
+    public void toggle_flywheel() { _tf(!flywheel); }
+    public void toggle_flywheel(boolean running) { _tf(running); }
+    void _sfp(double power) { config.flyL.setPower(power); config.flyR.setPower(power); }
+    double TARGET_VEL = 1000;
+    public boolean flywheel_critical() {
+        return (config.flyL.getVelocity() > TARGET_VEL && config.flyR.getVelocity() > TARGET_VEL);
     }
-    public void toggle_transport(boolean running) {
-        this.transportRunning = running;
-        config.transport.setPower(running ? 1 : 0);
+    public void update_flywheel() {
+        _sfp(flywheel
+                ? (flywheel_critical()
+                    ? 0.58
+                    : 0.60)
+                : 0);
     }
 }
