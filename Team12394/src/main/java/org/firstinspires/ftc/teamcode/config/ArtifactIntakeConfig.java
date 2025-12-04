@@ -17,7 +17,7 @@ public class ArtifactIntakeConfig {
         intake.setPower(0);
 
         transport = hwMap.get(DcMotor.class, "transport");
-//        transport.setDirection(DcMotorSimple.Direction.REVERSE);
+        transport.setDirection(DcMotorSimple.Direction.REVERSE);
 
         flyL = hwMap.get(DcMotorEx.class, "flyL");
         flyL.setDirection(DcMotorSimple.Direction.REVERSE);

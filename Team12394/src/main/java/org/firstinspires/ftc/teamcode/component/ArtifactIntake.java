@@ -23,11 +23,14 @@ public class ArtifactIntake {
     public boolean flywheel_critical() {
         return (config.flyL.getVelocity() > TARGET_VEL && config.flyR.getVelocity() > TARGET_VEL);
     }
+    double FLYWHEEL_POWER = 0.58;
     public void update_flywheel() {
-        _sfp(flywheel
+        _sfp(FLYWHEEL_POWER
+            * (flywheel
                 ? (flywheel_critical()
-                    ? 0.58
-                    : 0.60)
-                : 0);
+                    ? 0.7
+                    : 1.0)
+                : 0)
+        );
     }
 }

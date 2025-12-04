@@ -28,6 +28,7 @@ public class Drive_Train extends OpMode {
         outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
         intake_Motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
         Is = hardwareMap.get(CRServo.class, "Is");
+        Is.setDirection(DcMotorSimple.Direction.REVERSE);
         outtake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
         intake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
