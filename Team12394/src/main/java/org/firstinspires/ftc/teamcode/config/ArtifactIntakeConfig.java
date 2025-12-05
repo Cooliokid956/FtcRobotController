@@ -13,8 +13,6 @@ public class ArtifactIntakeConfig {
 
     public void init(HardwareMap hwMap) {
         intake = hwMap.get(DcMotor.class, "intake");
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake.setPower(0);
 
         transport = hwMap.get(DcMotor.class, "transport");
         transport.setDirection(DcMotorSimple.Direction.REVERSE);
