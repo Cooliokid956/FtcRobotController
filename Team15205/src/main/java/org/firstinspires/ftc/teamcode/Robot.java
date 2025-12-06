@@ -11,8 +11,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Robot {
     private DcMotorEx flm;
@@ -37,11 +39,36 @@ public class Robot {
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 3.77953 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * Math.PI))/1.75;
+            (WHEEL_DIAMETER_INCHES * Math.PI));
 
     private double ticksPerRotation;
     private IMU imu;
     LinearOpMode opMode;
+
+    public DcMotorEx getLeftFW() {
+        return leftFW;
+    }
+
+    public DcMotorEx getRightFW() {
+        return rightFW;
+    }
+
+    public DcMotorEx getIntakeMotor() {
+        return intakeMotor;
+    }
+
+    public CRServo getCenterPushServo() {
+        return centerPushServo;
+    }
+
+    public CRServo getPushServo1() {
+        return pushServo1;
+    }
+
+    public CRServo getPushServo2() {
+        return pushServo2;
+    }
+
     public void init(HardwareMap hwMap, /*Optional<LinearOpMode> opMode*/LinearOpMode opMode) {
         /*CONFIGURATION
         MOTORS
@@ -95,18 +122,18 @@ public class Robot {
         brm.setDirection(DcMotorEx.Direction.REVERSE);
         leftFW.setDirection(DcMotorEx.Direction.FORWARD);
         rightFW.setDirection(DcMotorEx.Direction.REVERSE);
-        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         pushServo1.setDirection(CRServo.Direction.REVERSE);
         pushServo2.setDirection(CRServo.Direction.FORWARD);
-        centerPushServo.setDirection(CRServo.Direction.FORWARD);
+        centerPushServo.setDirection(CRServo.Direction.REVERSE);
         ticksPerRotation = 537.6;
 
         imu = hwMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.DOWN);
+        RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
         imu.initialize(new IMU.Parameters(RevOrientation));
 
     }
-    public void drive(boolean fieldCentric) {
+    public void basicDrive(boolean fieldCentric) {
         double max;
         double frontLeftPower;
         double frontRightPower;
@@ -125,12 +152,12 @@ public class Robot {
 //            }
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);//used to calculate the rotation
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            frontLeftPower = rotY + rx - rotX;//vector calculations
+            frontLeftPower = rotY - rx - rotX;//vector calculations
             //double frontRightPower = rotY - rotX - rx;
-            frontRightPower = rotY - rx + rotX;
+            frontRightPower = rotY + rx + rotX;
             // double backLeftPower = rotY - rotX + rx;
-            backLeftPower = rotY - rx - rotX;
-            backRightPower = rotY + rx + rotX;
+            backLeftPower = rotY + rx - rotX;
+            backRightPower = rotY - rx + rotX;
 
             //max =  Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1); works but over-normalizes
         } else {
@@ -180,6 +207,33 @@ public class Robot {
         opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
         opMode.telemetry.addData("y, x, rx", x + " " + y + " " + rx);
         }
+    }
+    public void drive(double axial, double strafe, double yaw) {
+        double max;
+        double frontLeftPower;
+        double frontRightPower;
+        double backLeftPower;
+        double backRightPower;
+        frontLeftPower = axial - strafe - yaw;
+//            double frontRightPower = axial - lateral - yaw;
+        frontRightPower = axial + strafe + yaw;
+//            double backLeftPower = axial - lateral - yaw;
+        backLeftPower = axial - strafe + yaw;
+        backRightPower = axial + strafe - yaw;
+        max = Math.max(1.0, Math.abs(frontLeftPower));
+        max = Math.max(max, Math.abs(frontRightPower));
+        max = Math.max(max, Math.abs(backLeftPower));
+        max = Math.max(max, Math.abs(backRightPower));
+        if(max > 1.0) {//Evens out motor powers
+            frontLeftPower /= max;
+            frontRightPower /= max;
+            backLeftPower /= max;
+            backRightPower /= max;
+        }
+        setMotorSpeed(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+        opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
+        opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+        opMode.telemetry.addData("y, x, rx", axial + " " + strafe + " " + yaw);
     }
     public void encoderDrive(double speed, int frontLeftInches, int frontRightInches, int backLeftInches, int backRightInches, double timeout) {
         //if motors acting wonky refer to their direction
@@ -258,6 +312,23 @@ public class Robot {
             pushServo2.setPower(servo2Power);
         }
     }
+
+    /**
+     *return the pushing servo powers
+     * @return centerPushServo power, pushServo1(left) power, pushServo2(right) power
+     */
+    public Double[] getServoPower() {
+        return Arrays.stream(new double[]{centerPushServo.getPower(), pushServo1.getPower(), pushServo2.getPower()}).boxed().toArray(Double[]::new);
+    }
+
+    /**
+     * return flywheel powers
+     * @return leftFW power, rightFW power
+     */
+    public Double[] getFlywheelPowers() {
+        return Arrays.stream(new double[] {leftFW.getPower(), rightFW.getPower()}).boxed().toArray(Double[]::new);
+    }
+
     public void controlFlywheels(double powerLFW, double powerRFW) {
         leftFW.setPower(powerLFW);
         rightFW.setPower(powerRFW);
@@ -275,7 +346,13 @@ public class Robot {
         };
     }
     public double getHeading(AngleUnit angleUnit) {
-        return imu.getRobotYawPitchRollAngles().getYaw();
+        return normalize360(imu.getRobotYawPitchRollAngles().getYaw());
+    }
+
+    public double normalize360(double angle) {
+        angle = angle % 360;
+        if(angle < 0) angle += 360;
+        return angle;
     }
     public ArrayList<TestItem> getTests() {
         ArrayList<TestItem> tests = new ArrayList<>();
@@ -284,6 +361,36 @@ public class Robot {
         tests.add(new TestMotor("Back Left Motor", 0.5, blm));
         tests.add(new TestMotor("Back Right Motor", 0.5, brm));
         return tests;
+    }
+    public void faceTag(AprilTagDetection tag) {
+        turnRobotTo(normalize360(tag.ftcPose.bearing), AngleUnit.DEGREES);
+    }
+    public void turnRobotTo(double tarAngle, AngleUnit angleUnit) {
+        tarAngle = normalize360(tarAngle);
+        double k = 0.3;
+        double yaw = normalize360(getHeading(AngleUnit.DEGREES));
+        double turn;
+        double difference;
+        while(getAngleDisparity(yaw, AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES) < -10 || getAngleDisparity(yaw, AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES) > 10) {
+            difference = getAngleDisparity(getHeading(AngleUnit.DEGREES), AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES);
+            turn = -Math.signum(difference) * k;
+            drive(0, 0, turn);
+            yaw = normalize360(getHeading(AngleUnit.DEGREES));
+            opMode.sleep(100);
+        }
+        brakeWheels();
+    }
+    public void brakeWheels() {
+        flm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        blm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        brm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public double getAngleDisparity(double curAngle, AngleUnit curUnit, double tarAngle, AngleUnit tarUnit ) {
+        if(curUnit == AngleUnit.RADIANS) curAngle = Math.toDegrees(curAngle);
+        if(tarUnit == AngleUnit.RADIANS) tarAngle = Math.toDegrees(tarAngle);
+        //return normalize360(AngleUnit.DEGREES.normalize(tarAngle - curAngle));
+        return AngleUnit.DEGREES.normalize(tarAngle - curAngle);
     }
 
     public void encoderReset() {

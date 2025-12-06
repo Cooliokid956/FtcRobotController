@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -45,6 +46,7 @@ public class GoalEncoderAuto extends LinearOpMode {
         blm = hardwareMap.get(DcMotorEx.class, "bl");
         brm = hardwareMap.get(DcMotorEx.class, "br");
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("IF RED TURN ROBOT BACKWARDS", "");
         telemetry.addData("Starting at", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
         telemetry.addData("FOR BLUE ALLIANCE POSITION BACKWARDS", "");
         telemetry.update();
@@ -60,9 +62,9 @@ public class GoalEncoderAuto extends LinearOpMode {
         sleep(350);
         robot.encoderDrive(TURN_SPEED,-12, 12, -12, 12, 4.0);//turn left
         */
-        robot.encoderDrive(STRAFE_SPEED, -46, 46, -46, 46, 4.0);//move left
+        robot.encoderDrive(STRAFE_SPEED, -48, 48, -48, 48, 20.0);//move right
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);  // pause to display final telemetry message.
+          // pause to display final telemetry message.
     }
 }

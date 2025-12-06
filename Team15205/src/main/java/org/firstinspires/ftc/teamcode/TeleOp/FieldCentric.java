@@ -60,7 +60,7 @@ public class FieldCentric extends LinearOpMode {
 //                backRightPower /= denominator;
 //            }
         while(opModeIsActive()) {
-            robot.drive(true);
+            robot.basicDrive(true);
             if(usingTrigger && gamepad1.left_trigger > 0) {
                 robot.controlFlywheels(gamepad1.left_trigger, gamepad1.left_trigger);
                 robot.controlPushServos(gamepad1.left_trigger, gamepad1.left_trigger, gamepad1.left_trigger);
@@ -94,6 +94,7 @@ public class FieldCentric extends LinearOpMode {
                 robot.controlIntake(-1);
                 robot.controlPushServos(-1, 67, 67);
             }
+
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);
 

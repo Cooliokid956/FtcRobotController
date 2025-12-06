@@ -11,11 +11,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraControls;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Autonomous.AprilTagAuto;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "AprilTest", group = "OpModes")
 @Disabled
@@ -27,27 +30,8 @@ public class AprilVisionTest extends LinearOpMode {
 
     public void runOpMode() {
         boolean navigation = false;
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
-        aprilTagProcesor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagOutline(true)
-                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                .setLensIntrinsics(556.853, 556.853, 668.055, 426.931)
-                .build();
-        visionPortal = new VisionPortal.Builder()
-                .setCameraResolution(new Size(1280, 720))
-                .setCamera(webcamName)
-                .addProcessor(aprilTagProcesor)
-                .enableLiveView(true)
-                .build();
-
-        if(visionPortal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_READY) {
-            CameraControl webcamControl = visionPortal.getCameraControl(CameraControl.class);
-
-        }
-
-
+        AprilTagProcessor aprilPro = cam.getAprilTagProcessor();
+        visionPortal = cam.getPortal(hardwareMap, "webcam", aprilPro);
         telemetry.addData("Status", "Initialized");
         AprilTagAuto.Tag tag = null;
         AprilTagAuto.Tag side = null;
@@ -56,6 +40,7 @@ public class AprilVisionTest extends LinearOpMode {
         waitForStart();
         visionPortal.resumeLiveView();
         runtime.reset();
+        cam.aprilTagOptimization(visionPortal);
         //first and foremost move the bot to either red or blue
         while(opModeIsActive()) {
             currentDetections = aprilTagProcesor.getDetections();

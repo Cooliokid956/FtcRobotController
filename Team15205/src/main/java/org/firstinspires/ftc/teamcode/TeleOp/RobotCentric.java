@@ -3,9 +3,14 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.visionSoftware.cam;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @TeleOp(name = "RobotCentric", group = "OpModes")
 public class RobotCentric extends LinearOpMode {
@@ -28,13 +33,18 @@ public class RobotCentric extends LinearOpMode {
         blm = hardwareMap.get(DcMotorEx.class, "bl");
         brm = hardwareMap.get(DcMotorEx.class, "br");
 
+        AprilTagProcessor pro = cam.getAprilTagProcessor();
+        VisionPortal portal = cam.getPortal(hardwareMap, "webcam", pro);
+
+        cam.aprilTagOptimization(portal);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
+        portal.resumeLiveView();
         runtime.reset();
         telemetry.speak("six and seven");
         while(opModeIsActive()) {
-            robot.drive(false);
+            robot.basicDrive(false);
             if(usingTrigger && gamepad1.left_trigger > 0) {
                 robot.controlFlywheels(gamepad1.left_trigger, gamepad1.left_trigger);
                 robot.controlPushServos(gamepad1.left_trigger, gamepad1.left_trigger, gamepad1.left_trigger);
@@ -60,13 +70,39 @@ public class RobotCentric extends LinearOpMode {
                     robot.controlPushServos(1, 1, 1);
                 }
             } else if(gamepad1.left_trigger != 0) {usingTrigger = true;}
-            if(gamepad1.circle) {
-                robot.controlIntake(1);
-                robot.controlPushServos(1/2, 67, 67);
+            if(gamepad1.right_trigger > 0) {
+                robot.controlIntake(gamepad1.right_trigger/2);
+                robot.controlFlywheels(-0.5, -0.5);
+                robot.controlPushServos(1, 67, 67);
+            }
+            if(gamepad1.right_bumper) {
+                robot.controlPushServos(-0.5,0.15,0.15);
+                robot.controlFlywheels(-0.5, -0.5);
             }
             if(gamepad1.triangle) {
-                robot.controlIntake(-1);
-                robot.controlPushServos(-1/2, 67, 67);
+                robot.controlIntake(-0.5);
+                robot.controlPushServos(-1, 67, 67);
+            }
+            /*
+            if(gamepad1.square) {
+                for(AprilTagDetection detection : pro.getDetections()) {
+                    if(detection.id == 20 || detection.id == 24) {// face if red or blue tag
+
+//                        while(opModeIsActive()) {
+//                            telemetry.addData("Bearing data:", detection.ftcPose.bearing);
+//                            telemetry.update();
+//                        }
+//
+                        robot.faceTag(detection);
+                    }
+                }
+            }
+            */
+            if((gamepad1.right_trigger < 0.05 && gamepad1.right_trigger > 0.05) || (gamepad1.right_trigger > -0.05 && gamepad1.right_trigger < 0.05)) {
+                robot.controlIntake(0);
+                if(robot.getPushServo1().getPower() == 0 && robot.getPushServo2().getPower() == 0 && robot.getLeftFW().getPower() == 0 && robot.getRightFW().getPower() == 0) {
+                    robot.controlPushServos(0, 67, 67);
+                }
             }
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);

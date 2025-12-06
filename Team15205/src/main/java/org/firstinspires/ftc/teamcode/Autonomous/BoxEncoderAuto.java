@@ -46,6 +46,7 @@ public class BoxEncoderAuto extends LinearOpMode {
         blm = hardwareMap.get(DcMotorEx.class, "bl");
         brm = hardwareMap.get(DcMotorEx.class, "br");
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("IF BLUE TURN ROBOT BACKWARDS", "");
         telemetry.addData("Starting at", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
         telemetry.update();
         waitForStart();
@@ -60,7 +61,7 @@ public class BoxEncoderAuto extends LinearOpMode {
         sleep(350);
         robot.encoderDrive(TURN_SPEED,-12, 12, -12, 12, 4.0);//turn left
         */
-        robot.encoderDrive(DRIVE_SPEED, 16, 16, 16, 16, 4.0);//move forward
+        robot.encoderDrive(DRIVE_SPEED, -30, 30, -30, 30, 20.0);//move right
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
