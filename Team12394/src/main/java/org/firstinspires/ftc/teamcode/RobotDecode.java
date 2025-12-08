@@ -18,7 +18,10 @@ public class RobotDecode extends OpMode {
     }
 
     @Override
-    public void init_loop() { drive.manual.print(telemetry); }
+    public void init_loop() {
+        drive .manual.print(telemetry);
+        intake.manual.print(telemetry);
+    }
 
     @Override
     public void loop() {

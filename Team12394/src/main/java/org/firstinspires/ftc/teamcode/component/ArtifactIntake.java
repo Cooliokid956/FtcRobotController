@@ -1,8 +1,17 @@
 package org.firstinspires.ftc.teamcode.component;
 
 import org.firstinspires.ftc.teamcode.config.ArtifactIntakeConfig;
+import org.firstinspires.ftc.teamcode.lib.Manual;
 
 public class ArtifactIntake {
+    // Manual
+    public Manual manual = new Manual(
+            "Intake:",
+            "LT: Intake",
+            "RT: Flywheel",
+            "LB: Transport (also activated when flywheel reaches critical velocity)",
+            "RB: Transport (reverse)");
+
     public ArtifactIntakeConfig config = new ArtifactIntakeConfig();
 
     boolean intake, transport, flywheel;

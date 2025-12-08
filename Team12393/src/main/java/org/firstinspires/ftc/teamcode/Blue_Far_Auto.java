@@ -75,7 +75,7 @@ public class Blue_Far_Auto extends LinearOpMode {
         moveBackward();
         sleep(450);
         turnLeft();
-        sleep(0); // ??
+        sleep(450);
 
 
 
@@ -149,7 +149,7 @@ public class Blue_Far_Auto extends LinearOpMode {
     {
         outtake_Motor.setPower(1);
         reversed_outtake_Motor.setPower(1);
-        Is.setPower(-1);
+        Is.setPower(1);
     }
 
 }

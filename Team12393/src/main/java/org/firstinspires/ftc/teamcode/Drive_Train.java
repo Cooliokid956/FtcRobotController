@@ -28,7 +28,6 @@ public class Drive_Train extends OpMode {
         outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
         intake_Motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
         Is = hardwareMap.get(CRServo.class, "Is");
-        Is.setDirection(DcMotorSimple.Direction.REVERSE);
         outtake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
         intake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -58,13 +57,13 @@ public class Drive_Train extends OpMode {
             vel2 = reversed_outtake_Motor.getVelocity();
 
         Is.setPower(((vel >= 1500) && (vel2 >= 1500)) || (gamepad1.right_trigger >= 0.25)
-                ? -1
-                : (gamepad1.left_bumper ? 1 : 0));
+                ? 1
+                : (gamepad1.left_bumper ? -1 : 0));
         //Is.setPower((gamepad1.right_trigger >= 0.25) ? -1 : (gamepad1.left_bumper ? 1 :0));
         reversed_outtake_Motor.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
         outtake_Motor.setPower(gamepad1.x  ? 1 : gamepad1.a ? -1 : 0);
 
-        intake_Motor.setPower(gamepad1.right_bumper ? -.8 : gamepad1.left_bumper ? .8 : 0);
+        intake_Motor.setPower(gamepad1.right_bumper ? .8 : gamepad1.left_bumper ? -.8 : 0);
 
         double
             y = gamepad1.left_stick_y,

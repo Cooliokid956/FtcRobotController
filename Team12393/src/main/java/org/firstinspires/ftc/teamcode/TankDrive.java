@@ -56,21 +56,13 @@ public class TankDrive extends LinearOpMode {
         frontRightMotor.setTargetPosition(256);
         backLeftMotor.setTargetPosition(256);
         backRightMotor.setTargetPosition(2056); */
-        moveBackward();
-        sleep(300);
-        pause();
-        turnRight();
-        sleep(300);
-        pause();
-        rev();
+        moveForward();
         sleep(1000);
-        launch();
-        sleep(1000);
-        turnLeft();
-        sleep(300);
         pause();
-        moveBackward();
-        sleep(800);
+        moveLeft();
+        sleep(225);
+        pause();
+
 
 
 
