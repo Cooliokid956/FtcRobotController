@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.old.y24intothedeep.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 
 @Autonomous
-public class auto2024right extends OpMode {
+public class auto2024left extends OpMode {
     MecanumDrive drive = new MecanumDrive();
     Gamepad fakeGamepad = new Gamepad();
 
@@ -20,10 +20,9 @@ public class auto2024right extends OpMode {
     public void start() {
         resetRuntime();
     }
-
     @Override
     public void loop() {
-        fakeGamepad.left_stick_x = (getRuntime() < 4) ? 1.f : 0.f;
+        fakeGamepad.left_stick_x = (getRuntime() < 4) ? -1.f : 0.f;
         drive.drive(fakeGamepad, telemetry);
     }
 }

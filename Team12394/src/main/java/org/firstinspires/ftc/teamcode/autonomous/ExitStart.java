@@ -25,11 +25,7 @@ public class ExitStart extends OpMode {
 
     @Override
     public void loop() {
-        if (1.5 >= getRuntime()) {
-            gp.left_stick_y = -1.0f;
-        } else if (3 >= getRuntime()) {
-            gp.left_stick_y = -0.0f;
-        }
+        gp.left_stick_y = getRuntime() < 1.5 ? 1.f : 0.f;
         drive.drive(gp, telemetry);
     }
 }
