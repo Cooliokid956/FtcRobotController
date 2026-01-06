@@ -28,7 +28,7 @@ public class ArtifactIntake {
     void _tf(boolean on) { flywheel = on; }
     public void toggle_flywheel() { _tf(!flywheel); }
     public void toggle_flywheel(boolean running) { _tf(running); }
-    double TARGET_VEL = 1000;
+    double TARGET_VEL = 1600;
     void _sfp(double power) { config.flyL.setPower(power); config.flyR.setPower(power); }
     void _sfv(double vel) { config.flyL.setVelocity(vel); config.flyR.setVelocity(vel); }
     public boolean flywheel_critical() {
