@@ -14,10 +14,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 @TeleOp
 public class Drive_Train extends OpMode {
     private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor;
-    private CRServo Is;
+    private CRServo Is, rs, trigger;
 
     @Override
     public void init() {
@@ -28,6 +34,8 @@ public class Drive_Train extends OpMode {
         outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
         intake_Motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
         Is = hardwareMap.get(CRServo.class, "Is");
+        rs = hardwareMap.get(CRServo.class, "rs");
+        trigger = hardwareMap.get(CRServo.class,"trigger");
         outtake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor = hardwareMap.get(DcMotorEx.class, "flm");
@@ -51,27 +59,31 @@ public class Drive_Train extends OpMode {
 
     @Override
     public void loop() {
+        //Powers Both servos to push upwards when right trigger in held otherwise stops in place
+        if (gamepad1.right_trigger >= 0.2) { Is.setPower(-1); rs.setPower(1); } else { Is.setPower(0); rs.setPower(0); }
+        //Powers Both servos to push downwards when right trigger in held otherwise stops in place
+        if (gamepad1.left_trigger >= 0.2) { Is.setPower(1); rs.setPower(-1); } else { Is.setPower(0); rs.setPower(0); }
+        //Powers trigger servo forward (left bumper) or back (button b)
+        if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
+
+        //Has the Outtake motors power on and start spinning to shoot when the button x is held down
+        reversed_outtake_Motor.setPower(gamepad1.x ? .8 : 0);
+        outtake_Motor.setPower(gamepad1.x ? 1 : 0);
+        //Has the intake motor start spinning inwards when the right bumper is help down
+        intake_Motor.setPower(gamepad1.right_bumper ? -.8 : 0);
+
+        /*
+        Code to calculate the power necessary to give each motor in the strafe mechanism
+        the correct power to move where we want it to.
+        */
         double
-            vel = outtake_Motor.getVelocity(),
-            vel2 = reversed_outtake_Motor.getVelocity();
-
-        Is.setPower(((vel >= 1500) && (vel2 >= 1500)) || (gamepad1.right_trigger >= 0.25)
-                ? 1
-                : (gamepad1.left_bumper ? -1 : 0));
-        //Is.setPower((gamepad1.right_trigger >= 0.25) ? -1 : (gamepad1.left_bumper ? 1 :0));
-        reversed_outtake_Motor.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
-        outtake_Motor.setPower(gamepad1.x  ? 1 : gamepad1.a ? -1 : 0);
-
-        intake_Motor.setPower(gamepad1.right_bumper ? .8 : gamepad1.left_bumper ? -.8 : 0);
-
-        double
-            y = gamepad1.left_stick_y,
-            x = gamepad1.left_stick_x,
-            turn = gamepad1.right_stick_x,
-            frontLeftPower = y + x - turn,
-            frontRightPower = y + x + turn,
-            backLeftPower = y - x - turn,
-            backRightPower = y - x + turn;
+                y = gamepad1.left_stick_y,
+                x = -gamepad1.left_stick_x,
+                turn = gamepad1.right_stick_x,
+                frontLeftPower = y + x - turn,
+                frontRightPower = y - x + turn,
+                backLeftPower = y - x - turn,
+                backRightPower = y + x + turn;
 
         double maxRawPower = max(max(max(abs(frontLeftPower), abs(backLeftPower)),
                 max(abs(backRightPower), abs(frontRightPower))), 1);
@@ -79,10 +91,26 @@ public class Drive_Train extends OpMode {
         frontRightMotor.setPower(frontRightPower / maxRawPower);
         backLeftMotor.setPower(backLeftPower / maxRawPower);
         backRightMotor.setPower(backRightPower / maxRawPower);
+
         telemetry.addData("Front Left Motor: ", frontLeftPower);
-        telemetry.addData("Front Right Motor: ",frontRightPower);
-        telemetry.addData("BackLeftMotor",backLeftPower);
-        telemetry.addData("backRightPower",backRightPower);
+        telemetry.addData("Front Right Motor: ", frontRightPower);
+        telemetry.addData("BackLeftMotor", backLeftPower);
+        telemetry.addData("backRightPower", backRightPower);
+        telemetry.addData("Left Bumper Activated",gamepad1.left_bumper);
+        telemetry.update();
+//        reversed_outtake_Motor.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
+//        outtake_Motor.setPower(gamepad1.x ? 1 : gamepad1.a ? -1 : 0);
+
+//      intake_Motor.setPower(gamepad1.left_bumper ? .8 : gamepad1.right_bumper ? -.8 : 0);
+
+//        double
+//            vel = outtake_Motor.getVelocity(),
+//            vel2 = reversed_outtake_Motor.getVelocity();
+//
+//        Is.setPower(((vel >= 1500) && (vel2 >= 1500)) || (gamepad1.right_trigger >= 0.25)
+//                ? 1
+//                : (gamepad1.left_bumper ? -1 : 0));
+//        Is.setPower((gamepad1.right_trigger >= 0.25) ? -1 : (gamepad1.left_bumper ? 1 :0));
     }
 }
 
