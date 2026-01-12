@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp
 public class Drive_Train extends OpMode {
-    private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor;
+    private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor, rotateMotor;
     private CRServo Is, rs, trigger;
 
     @Override
@@ -33,6 +33,7 @@ public class Drive_Train extends OpMode {
         reversed_outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor2");
         outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
         intake_Motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
+        rotateMotor = hardwareMap.get(DcMotorEx.class,"rotateMotor");
         Is = hardwareMap.get(CRServo.class, "Is");
         rs = hardwareMap.get(CRServo.class, "rs");
         trigger = hardwareMap.get(CRServo.class,"trigger");
@@ -55,22 +56,47 @@ public class Drive_Train extends OpMode {
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rotateMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rotateMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void loop() {
         //Powers Both servos to push upwards when right trigger in held otherwise stops in place
+        /*
         if (gamepad1.right_trigger >= 0.2) { Is.setPower(-1); rs.setPower(1); } else { Is.setPower(0); rs.setPower(0); }
+        */
         //Powers Both servos to push downwards when right trigger in held otherwise stops in place
+        /*
         if (gamepad1.left_trigger >= 0.2) { Is.setPower(1); rs.setPower(-1); } else { Is.setPower(0); rs.setPower(0); }
-        //Powers trigger servo forward (left bumper) or back (button b)
-        if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
+        */
 
+
+        //Powers trigger servo forward (left bumper) or back (button b)
+        //if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
+
+        trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
+
+        //Rotate motor code for it to go into the set position everytime you press the right trigger
+        if (gamepad1.right_trigger >= 0.2) {
+            rotateMotor.setTargetPosition(48);
+            rotateMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rotateMotor.setPower(.1);
+        }
+
+        if(rotateMotor.getTargetPosition() == rotateMotor.getCurrentPosition()) {
+            rotateMotor.setPower(0);
+            rotateMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         //Has the Outtake motors power on and start spinning to shoot when the button x is held down
         reversed_outtake_Motor.setPower(gamepad1.x ? .8 : 0);
         outtake_Motor.setPower(gamepad1.x ? 1 : 0);
+
         //Has the intake motor start spinning inwards when the right bumper is help down
         intake_Motor.setPower(gamepad1.right_bumper ? -.8 : 0);
+        //Rotates the motor
+
 
         /*
         Code to calculate the power necessary to give each motor in the strafe mechanism
@@ -97,6 +123,10 @@ public class Drive_Train extends OpMode {
         telemetry.addData("BackLeftMotor", backLeftPower);
         telemetry.addData("backRightPower", backRightPower);
         telemetry.addData("Left Bumper Activated",gamepad1.left_bumper);
+
+        telemetry.addData("TargetPosition", rotateMotor.getTargetPosition());
+        telemetry.addData("Current Position", rotateMotor.getCurrentPosition());
+        telemetry.addData("Motor Mode", rotateMotor.getMode());
         telemetry.update();
 //        reversed_outtake_Motor.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
 //        outtake_Motor.setPower(gamepad1.x ? 1 : gamepad1.a ? -1 : 0);

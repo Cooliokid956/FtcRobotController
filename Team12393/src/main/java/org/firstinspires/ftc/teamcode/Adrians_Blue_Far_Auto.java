@@ -39,19 +39,20 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
 
         //Auto starts here
         waitForStart();
-        moveBackward(1000);
-        pause(200);
-        turnRight(1000);
-        pause(200);
-        rev(1500);
-        launch(2500);
-        turnLeft(1000);
-        pause(200);
-        moveBackward(1000);
-        pause(200);
-        turnLeft(1000);
-        pause(200);
-
+//        moveBackward(1000);
+//        pause(200);
+//        turnRight(1000);
+//        pause(200);
+//        rev(1500);
+//        launch(2500);
+//        turnLeft(1000);
+//        pause(200);
+//        moveBackward(1000);
+//        pause(200);
+//        turnLeft(1000);
+//        pause(200);
+        moveForward(1000); //Adjust to get to the top of the Triangle
+        pause(500);
 
 
 
