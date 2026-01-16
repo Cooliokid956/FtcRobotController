@@ -57,8 +57,10 @@ public class Drive_Train extends OpMode {
 
         cylinder = hardwareMap.get(DcMotorEx.class, "rotateMotor");
         cylinder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cylinder.setTargetPosition(0);
         cylinder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        cylinder.setPower(.1);
+        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        cylinder.setPower(.2);
 //        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -87,9 +89,9 @@ public class Drive_Train extends OpMode {
         boolean lTrig = gamepad1.left_trigger > 0.2;
         boolean rTrig = gamepad1.right_trigger > 0.2;
 
-        cylShoot = lTrig; // modifier
-//        if (lTrig && !lTrigDown) cylShoot = !cylShoot;
-//        lTrigDown = lTrig; // toggle
+//        cylShoot = lTrig; // modifier
+        if (lTrig && !lTrigDown) cylShoot = !cylShoot;
+        lTrigDown = lTrig; // toggle
 
         if (rTrig && !rTrigDown) cylTicks += cylChamberTicks;
         rTrigDown = rTrig;
@@ -99,7 +101,12 @@ public class Drive_Train extends OpMode {
         if (cylShoot) { // shoot mode
             reversed_outtake_Motor.setPower(action ? .8 : 0);
             outtake_Motor.setPower(action ? 1 : 0);
-        } else intake_Motor.setPower(action ? -.8 : 0); // intake mode
+            intake_Motor.setPower(0);
+        } else { // intake mode
+            intake_Motor.setPower(action ? -.8 : 0);
+            reversed_outtake_Motor.setPower(0);
+            outtake_Motor.setPower(0);
+        }
 
         /*
         Code to calculate the power necessary to give each motor in the strafe mechanism
