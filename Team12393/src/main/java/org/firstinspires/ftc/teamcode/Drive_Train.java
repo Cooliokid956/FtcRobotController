@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class Drive_Train extends OpMode {
     private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor;
-    private CRServo Is, rs, trigger;
+    // private CRServo Is, rs; //, trigger;
+    private Servo trigger;
 
     DcMotorEx cylinder;
     int
@@ -32,9 +34,10 @@ public class Drive_Train extends OpMode {
         reversed_outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor2");
         outtake_Motor = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
         intake_Motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
-        Is = hardwareMap.get(CRServo.class, "Is");
-        rs = hardwareMap.get(CRServo.class, "rs");
-        trigger = hardwareMap.get(CRServo.class,"trigger");
+//        Is = hardwareMap.get(CRServo.class, "Is");
+//        rs = hardwareMap.get(CRServo.class, "rs");
+//        trigger = hardwareMap.get(CRServo.class,"trigger");
+        trigger = hardwareMap.get(Servo.class,"trigger");
         outtake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor = hardwareMap.get(DcMotorEx.class, "flm");
@@ -60,7 +63,8 @@ public class Drive_Train extends OpMode {
         cylinder.setTargetPosition(0);
         cylinder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        cylinder.setPower(.2);
+        cylinder.setPower(.8);
+        cylinder.setPositionPIDFCoefficients(20);
 //        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -79,7 +83,8 @@ public class Drive_Train extends OpMode {
         // Powers trigger servo forward (left bumper) or back (button b)
         // if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
 
-        trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
+//        trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
+        trigger.setPosition(gamepad1.left_bumper ? 1 : 0);
 
         // cylinder control code
         // L Trigger - Toggle mode
@@ -108,6 +113,12 @@ public class Drive_Train extends OpMode {
             outtake_Motor.setPower(0);
         }
 
+        double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
+        telemetry.addData("cylinder p coeff", p);
+        if (gamepad1.dpadUpWasPressed())
+            cylinder.setPositionPIDFCoefficients(p + 0.1);
+        else if (gamepad1.dpadDownWasPressed())
+            cylinder.setPositionPIDFCoefficients(p - 0.1);
         /*
         Code to calculate the power necessary to give each motor in the strafe mechanism
         the correct power to move where we want it to.
