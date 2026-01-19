@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class Drive_Train extends OpMode {
     private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor;
-    // private CRServo Is, rs; //, trigger;
+//     private CRServo Is, rs;, trigger;
     private Servo trigger;
 
     DcMotorEx cylinder;
@@ -38,6 +38,7 @@ public class Drive_Train extends OpMode {
 //        rs = hardwareMap.get(CRServo.class, "rs");
 //        trigger = hardwareMap.get(CRServo.class,"trigger");
         trigger = hardwareMap.get(Servo.class,"trigger");
+        trigger.setDirection(Servo.Direction.REVERSE);
         outtake_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor = hardwareMap.get(DcMotorEx.class, "flm");
@@ -84,7 +85,7 @@ public class Drive_Train extends OpMode {
         // if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
 
 //        trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
-        trigger.setPosition(gamepad1.left_bumper ? 1 : 0);
+        trigger.setPosition(gamepad1.left_bumper ? -1 : 1);
 
         // cylinder control code
         // L Trigger - Toggle mode
