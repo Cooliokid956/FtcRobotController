@@ -20,6 +20,7 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
     int frontLeftPosition = 0;
     int frontRightPosition = 0;
 
+    int cylinderPosition = 0;
     int
             cylOffsetTicks = 48,
             cylChamberTicks = 96,
@@ -85,16 +86,16 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
 
         //Auto starts here
         waitForStart();
-        trigger.setPosition(1);
-        moveBackward(5000); //Adjust to get to the top of the Triangle
-        turnLeft(20000);
+        moveBackward(3500);
         pause(500);
-        rev(5000);
+        turnLeft(395);
+        pause(1500);
+        rev(4500);
         launch();
         loadNext();
-
-
-
+        launch();
+        loadNext();
+        launch();
         goToIntake();
 
         sleep(1000);
@@ -148,11 +149,15 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
         );
     }
 
-    private void getToPosition()
+    private void getToPosition(DcMotor x)
     {
-        while(frontLeftPosition > frontLeftMotor.getCurrentPosition())
+        while(x.isBusy())
         {
-            continue;
+            telemetry.addData("Front Left Position", frontLeftPosition);
+            telemetry.addData("Front Right Position", frontRightPosition);
+            telemetry.addData("Back Left Position", backLeftPosition);
+            telemetry.addData("Back Right Position", backRightPosition);
+            telemetry.update();
         }
     }
 
@@ -162,21 +167,11 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
         frontRightMotor.setTargetPosition(frontRightPosition += fr);
         backLeftMotor.setTargetPosition(backLeftPosition += bl);
         backRightMotor.setTargetPosition(backRightPosition += br);
-        getToPosition();
+        getToPosition(frontLeftMotor);
     }
     private void pause(int ms)
     {
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-
         sleep(ms);
-
-        frontLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(0.5);
-        backLeftMotor.setPower(0.5);
-        backRightMotor.setPower(0.5);
     }
     private void rev(int ms)
     {
@@ -186,18 +181,23 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
     }
     private void launch()
     {
+        getToPosition(cylinder);
+        getToPosition(cylinder);
         trigger.setPosition(-1);
-        pause(2000);
+        pause(1000);
         trigger.setPosition(1);
+        pause(500);
     }
 
     private void loadNext()
     {
-        cylinder.setTargetPosition(cylTicks + 96);
+        cylinder.setTargetPosition(cylinderPosition += 96);
+        getToPosition(cylinder);
     }
 
     private void goToIntake()
     {
-        cylinder.setTargetPosition(cylTicks + 48);
+        cylinder.setTargetPosition(cylinderPosition += 48);
+        getToPosition(cylinder);
     }
 }
