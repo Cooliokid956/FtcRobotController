@@ -3,13 +3,11 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.visionSoftware.cam;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @TeleOp(name = "RobotCentric", group = "OpModes")
@@ -24,6 +22,12 @@ public class RobotCentric extends LinearOpMode {
     int bumperPressCount = 0;
     boolean usingTrigger = true;
 
+    private ElapsedTime bumpTime = new ElapsedTime();
+    boolean rightBump = false;
+
+    ElapsedTime servoTime = new ElapsedTime();
+
+    boolean servoNow = false;
 
     public void runOpMode() {
         Robot robot = new Robot();
@@ -62,12 +66,14 @@ public class RobotCentric extends LinearOpMode {
                         robot.controlFlywheels(0, 0);
                         robot.controlPushServos(0, 0, 0);
                         robot.controlIntake(0);
+                        servoNow = false;
                     }
                 } else {
                     bumperPressCount = 1;
                     lastTime = runtime.seconds();
+                    servoTime.reset();
                     robot.controlFlywheels(1, 1);
-                    robot.controlPushServos(1, 1, 1);
+                    servoNow = true;
                 }
             } else if(gamepad1.left_trigger != 0) {usingTrigger = true;}
             if(gamepad1.right_trigger > 0) {
@@ -75,10 +81,12 @@ public class RobotCentric extends LinearOpMode {
                 robot.controlFlywheels(-0.5, -0.5);
                 robot.controlPushServos(1, 67, 67);
             }
-            if(gamepad1.right_bumper) {
+            if(gamepad1.right_bumper && (!rightBump || bumpTime.time() < 2.0)) {
                 robot.controlPushServos(-0.5,0.15,0.15);
                 robot.controlFlywheels(-0.5, -0.5);
+                bumpTime.reset();
             }
+            rightBump = gamepad1.right_bumper;
             if(gamepad1.triangle) {
                 robot.controlIntake(-0.5);
                 robot.controlPushServos(-1, 67, 67);
@@ -103,6 +111,9 @@ public class RobotCentric extends LinearOpMode {
                 if(robot.getPushServo1().getPower() == 0 && robot.getPushServo2().getPower() == 0 && robot.getLeftFW().getPower() == 0 && robot.getRightFW().getPower() == 0) {
                     robot.controlPushServos(0, 67, 67);
                 }
+            }
+            if(servoNow && servoTime.time() > 2.0) {
+                robot.controlPushServos(1, 67, 67);
             }
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);

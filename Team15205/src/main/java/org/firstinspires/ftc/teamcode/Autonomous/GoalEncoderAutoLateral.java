@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Robot;
 
 
-@Autonomous(name = "GoalEncoder", group = "OpModes")
-public class GoalEncoderAuto extends LinearOpMode {
+@Autonomous(name = "GoalEncoderLateral", group = "OpModes")
+public class GoalEncoderAutoLateral extends LinearOpMode {
 //    public enum Seq{
 //        ONE,
 //        TWO,
@@ -63,6 +63,18 @@ public class GoalEncoderAuto extends LinearOpMode {
         robot.encoderDrive(TURN_SPEED,-12, 12, -12, 12, 4.0);//turn left
         */
         robot.encoderDrive(STRAFE_SPEED, -48, 48, -48, 48, 20.0);//move right
+        /*
+        implement camera to scan the obelisk
+        go forward set amount of distance to desired ball pattern
+        go left or right depending on the color of our team
+        turn certain amount of pre programmed rotation based on IMU
+        turn on shooting motors in a sequence style and score
+        //also set a default path that should work no matter what
+         */
+
+        robot.encoderDrive(DRIVE_SPEED, 12, 12, 12, 12, 5);
+        robot.turnRobotTo(90, AngleUnit.DEGREES);
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
           // pause to display final telemetry message.
