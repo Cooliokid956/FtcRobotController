@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
 @Autonomous
-public class Adrians_Blue_Far_Auto extends LinearOpMode {
+public class Adrians_Red_Far_Auto extends LinearOpMode {
     private DcMotorEx frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor, reversed_outtake_Motor, outtake_Motor, intake_Motor;
     //     private CRServo Is, rs;, trigger;
     private Servo trigger;
@@ -88,9 +88,9 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
         waitForStart();
         moveBackward(3500);
         pause(500);
-        turnLeft(395);
+        turnRight(395);
         pause(1500);
-        rev(850);
+        rev(750);
         launch();
         loadNext();
         rev(750);
@@ -177,8 +177,8 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
     }
     private void rev(int ms)
     {
-        outtake_Motor.setPower(1);
-        reversed_outtake_Motor.setPower(1);
+        outtake_Motor.setPower(.85);
+        reversed_outtake_Motor.setPower(.85);
         pause(ms);
         outtake_Motor.setPower(0);
         reversed_outtake_Motor.setPower(0);
