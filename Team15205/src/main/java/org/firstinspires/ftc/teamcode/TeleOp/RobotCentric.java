@@ -58,13 +58,14 @@ public class RobotCentric extends LinearOpMode {
                     bumperPressCount++;
                     if (bumperPressCount == 3) {
                         robot.controlFlywheels(-1, -1);
-                        robot.controlPushServos(-1, -1, -1);
+                        robot.controlIntake(-1);
+                        //robot.controlPushServos(-1, -1, -1);
                         bumperPressCount = 0;
                         lastTime = -1.0;
                     } else {
                         lastTime = runtime.seconds();
                         robot.controlFlywheels(0, 0);
-                        robot.controlPushServos(0, 0, 0);
+                     //   robot.controlPushServos(0, 0, 0);
                         robot.controlIntake(0);
                         servoNow = false;
                     }
@@ -73,23 +74,25 @@ public class RobotCentric extends LinearOpMode {
                     lastTime = runtime.seconds();
                     servoTime.reset();
                     robot.controlFlywheels(1, 1);
+                    robot.controlIntake(1);
                     servoNow = true;
                 }
             } else if(gamepad1.left_trigger != 0) {usingTrigger = true;}
             if(gamepad1.right_trigger > 0) {
-                robot.controlIntake(gamepad1.right_trigger/2);
-                robot.controlFlywheels(-0.5, -0.5);
-                robot.controlPushServos(1, 67, 67);
+                robot.controlIntake(gamepad1.right_trigger);
+                //robot.controlFlywheels(-0.5, -0.5);
+              //  robot.controlPushServos(1, 67, 67);
             }
             if(gamepad1.right_bumper && (!rightBump || bumpTime.time() < 2.0)) {
-                robot.controlPushServos(-0.5,0.15,0.15);
-                robot.controlFlywheels(-0.5, -0.5);
+                //robot.controlPushServos(-0.5,0.15,0.15);
+               // robot.controlFlywheels(-1, -1);///???
+                robot.controlIntake(1);
                 bumpTime.reset();
             }
             rightBump = gamepad1.right_bumper;
             if(gamepad1.triangle) {
-                robot.controlIntake(-0.5);
-                robot.controlPushServos(-1, 67, 67);
+                robot.controlIntake(-1);
+               // robot.controlPushServos(-1, 67, 67);
             }
             /*
             if(gamepad1.square) {
@@ -107,13 +110,13 @@ public class RobotCentric extends LinearOpMode {
             }
             */
             if((gamepad1.right_trigger < 0.05 && gamepad1.right_trigger > 0.05) || (gamepad1.right_trigger > -0.05 && gamepad1.right_trigger < 0.05)) {
-                robot.controlIntake(0);
-                if(robot.getPushServo1().getPower() == 0 && robot.getPushServo2().getPower() == 0 && robot.getLeftFW().getPower() == 0 && robot.getRightFW().getPower() == 0) {
-                    robot.controlPushServos(0, 67, 67);
-                }
+                //robot.controlIntake(0);
+                //if(robot.getPushServo1().getPower() == 0 && robot.getPushServo2().getPower() == 0 && robot.getLeftFW().getPower() == 0 && robot.getRightFW().getPower() == 0) {
+                 //   robot.controlPushServos(0, 67, 67);
+                //}
             }
             if(servoNow && servoTime.time() > 2.0) {
-                robot.controlPushServos(1, 67, 67);
+                //robot.controlPushServos(1, 67, 67);
             }
             lBumper = gamepad1.left_bumper;
             telemetry.addData("Bumper Press Count: ", bumperPressCount);

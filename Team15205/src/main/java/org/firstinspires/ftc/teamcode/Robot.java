@@ -57,15 +57,15 @@ public class Robot {
         return intakeMotor;
     }
 
-    public CRServo getCenterPushServo() {return centerPushServo;}
+  //  public CRServo getCenterPushServo() {return centerPushServo;}
 
-    public CRServo getPushServo1() {
-        return pushServo1;
-    }
+   // public CRServo getPushServo1() {
+    //    return pushServo1;
+    //}
 
-    public CRServo getPushServo2() {
-        return pushServo2;
-    }
+   // public CRServo getPushServo2() {
+     //   return pushServo2;
+   // }
 
     public void init(HardwareMap hwMap, /*Optional<LinearOpMode> opMode*/LinearOpMode opMode) {
         /*CONFIGURATION
@@ -106,9 +106,9 @@ public class Robot {
         intakeMotor = hwMap.get(DcMotorEx.class, "intake");
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        centerPushServo = hwMap.get(CRServo.class, "centerPushServo");
-        pushServo1 = hwMap.get(CRServo.class, "pushServoL");
-        pushServo2 = hwMap.get(CRServo.class, "pushServoR");
+    //    centerPushServo = hwMap.get(CRServo.class, "centerPushServo");
+      //  pushServo1 = hwMap.get(CRServo.class, "pushServoL");
+      //  pushServo2 = hwMap.get(CRServo.class, "pushServoR");
 //        flm.setDirection(DcMotor.Direction.REVERSE);
 //        blm.setDirection(DcMotor.Direction.REVERSE);
 //        frm.setDirection(DcMotor.Direction.FORWARD);
@@ -120,10 +120,10 @@ public class Robot {
         brm.setDirection(DcMotorEx.Direction.FORWARD);
         leftFW.setDirection(DcMotorEx.Direction.REVERSE);
         rightFW.setDirection(DcMotorEx.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        pushServo1.setDirection(CRServo.Direction.REVERSE);
-        pushServo2.setDirection(CRServo.Direction.FORWARD);
-        centerPushServo.setDirection(CRServo.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
+       // pushServo1.setDirection(CRServo.Direction.REVERSE);
+      //  pushServo2.setDirection(CRServo.Direction.FORWARD);
+    //    centerPushServo.setDirection(CRServo.Direction.REVERSE);
         ticksPerRotation = 537.6;
         imu = hwMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP);
@@ -154,14 +154,15 @@ public class Robot {
             double axial = y;
             double yaw = rx;
             double lateral = x;//vector calculations
-            frontLeftPower = axial + yaw + lateral;//-1
-            frontRightPower = axial - yaw - lateral;//-1
-            backLeftPower = axial + yaw - lateral;//1
-            backRightPower = axial - yaw + lateral;//-1
+            frontLeftPower = axial - yaw + lateral;//
+            frontRightPower = axial + yaw - lateral;//
+            backLeftPower = axial + yaw - lateral;//
+            backRightPower = axial - yaw +  lateral;//
         }
         max = Math.max(1.0, Math.abs(frontLeftPower));
         max = Math.max(max, Math.abs(frontRightPower));
         max = Math.max(max, Math.abs(backLeftPower));
+
         max = Math.max(max, Math.abs(backRightPower));
 //        speedMultiplier = 1.0 - (opMode.gamepad1.right_trigger * 0.7);// controls speed with right trigger
         if(max > 1.0) {//Evens out motor powers
@@ -291,13 +292,13 @@ public class Robot {
     }
     public void controlPushServos(double centerPower, double servo1Power, double servo2Power) {
         if(centerPower != 67) {
-            centerPushServo.setPower(centerPower);
+            //centerPushServo.setPower(centerPower);
         }
         if(servo1Power != 67) {
-            pushServo1.setPower(servo1Power);
+           // pushServo1.setPower(servo1Power);
         }
         if(servo2Power != 67) {
-            pushServo2.setPower(servo2Power);
+            //pushServo2.setPower(servo2Power);
         }
     }
 
@@ -305,9 +306,9 @@ public class Robot {
      *return the pushing servo powers
      * @return centerPushServo power, pushServo1(left) power, pushServo2(right) power
      */
-    public Double[] getServoPower() {
-        return Arrays.stream(new double[]{centerPushServo.getPower(), pushServo1.getPower(), pushServo2.getPower()}).boxed().toArray(Double[]::new);
-    }
+   // public Double[] getServoPower() {
+        //return Arrays.stream(new double[]{centerPushServo.getPower(), pushServo1.getPower(), pushServo2.getPower()}).boxed().toArray(Double[]::new);
+ //   }
 
     /**
      * return flywheel powers
@@ -357,19 +358,23 @@ public class Robot {
         tarAngle = normalize360(tarAngle);
         double kp = 0.02;//proportional gain - adjust this to alter the speed
         double yaw = normalize360(getHeading(AngleUnit.DEGREES));
+        double minPower = 0.15;
         double turn;
         double difference;
         while(getAngleDisparity(yaw, AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES) < -10 || getAngleDisparity(yaw, AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES) > 10) {
             difference = getAngleDisparity(getHeading(AngleUnit.DEGREES), AngleUnit.DEGREES, tarAngle, AngleUnit.DEGREES);
             turn = -Math.signum(difference) * kp;
+            if(Math.abs(turn) < minPower) {
+                turn = Math.signum(turn) * minPower;
+            }
             drive(0, 0, turn);
             yaw = normalize360(getHeading(AngleUnit.DEGREES));
             opMode.sleep(10);
         }
         brakeWheels();
-
     }
     public void brakeWheels() {
+        setMotorSpeed(0, 0, 0, 0);
         flm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         blm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
