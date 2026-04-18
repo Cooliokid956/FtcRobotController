@@ -107,7 +107,7 @@ public class Drive_Train extends OpMode {
         rTrigDown = rTrig;
 
         if (gamepad1.dpadRightWasPressed()) shotPower = !shotPower;
-        double power = shotPower ? .75 : .80;
+        double power = shotPower ? .4 : .85;
 
         telemetry.addData("shot mode", power);
 
