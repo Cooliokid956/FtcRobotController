@@ -107,7 +107,7 @@ public class Drive_Train extends OpMode {
         rTrigDown = rTrig;
 
         if (gamepad1.dpadRightWasPressed()) shotPower = !shotPower;
-        double power = shotPower ? .4 : .85;
+        double power = shotPower ? .40 : .85;
 
         telemetry.addData("shot mode", power);
 
@@ -149,9 +149,11 @@ public class Drive_Train extends OpMode {
         telemetry.addData("backRightPower", backRightPower);
         telemetry.addData("Left Bumper Activated",gamepad1.left_bumper);
 
+
         telemetry.addData("TargetPosition", cylinder.getTargetPosition());
         telemetry.addData("Current Position", cylinder.getCurrentPosition());
         telemetry.addData("Motor Mode", cylinder.getMode());
+        telemetry.addData("Shot power: ", shotPower ? "LOW":"HIGH");
         telemetry.update();
 //        outtakeL.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
 //        outtakeR.setPower(gamepad1.x ? 1 : gamepad1.a ? -1 : 0);
