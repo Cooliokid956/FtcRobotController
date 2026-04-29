@@ -106,7 +106,7 @@ public class Drive_Train extends OpMode {
         if (gamepad1.dpadLeftWasPressed()) cylTicks -= cylChamberTicks;
         if (rTrig && !rTrigDown) cylTicks += cylChamberTicks;
         rTrigDown = rTrig;
-
+        //test
         if (gamepad1.dpadRightWasPressed()) shotPower = !shotPower;
         double power = (shotPower) ? (.43 + difference) : (.60 + difference);
 
