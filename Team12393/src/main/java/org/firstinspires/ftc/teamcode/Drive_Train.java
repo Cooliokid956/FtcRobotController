@@ -21,6 +21,7 @@ public class Drive_Train extends OpMode {
             cylOffsetTicks = 48,
             cylChamberTicks = 96,
             cylTicks;
+    double difference = 0;
     boolean
             cylShoot, // (In, Out)
             lTrigDown,
@@ -107,7 +108,7 @@ public class Drive_Train extends OpMode {
         rTrigDown = rTrig;
 
         if (gamepad1.dpadRightWasPressed()) shotPower = !shotPower;
-        double power = shotPower ? .46 : .60;
+        double power = (shotPower) ? (.43 + difference) : (.60 + difference);
 
         telemetry.addData("shot mode", power);
 
@@ -120,9 +121,9 @@ public class Drive_Train extends OpMode {
         double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
         telemetry.addData("cylinder p coeff", p);
         if (gamepad1.dpadUpWasPressed())
-            cylinder.setPositionPIDFCoefficients(p + 0.1);
+            difference += 0.01;
         else if (gamepad1.dpadDownWasPressed())
-            cylinder.setPositionPIDFCoefficients(p - 0.1);
+            difference -= 0.01;
         /*
         Code to calculate the power necessary to give each motor in the strafe mechanism
         the correct power to move where we want it to.
