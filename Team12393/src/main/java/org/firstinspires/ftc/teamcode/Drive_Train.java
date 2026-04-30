@@ -92,12 +92,9 @@ public class Drive_Train extends OpMode {
         trigger.setPosition(gamepad1.left_bumper ? -1 : 1);
 
         // cylinder control code
-        // L Trigger - Toggle mode
-        // R Trigger - Rotate cylinder
-        // R Bumper - Action (Intake/Outtake)
-        boolean action = gamepad1.right_bumper;
-        boolean lTrig = gamepad1.left_trigger > 0.2;
-        boolean rTrig = gamepad1.right_trigger > 0.2;
+        boolean action = gamepad1.right_bumper;       // R Bumper - Action (Intake/Outtake)
+        boolean lTrig = gamepad1.left_trigger > 0.2;  // L Trigger - Toggle mode
+        boolean rTrig = gamepad1.right_trigger > 0.2; // R Trigger - Rotate cylinder
 
 //        cylShoot = lTrig; // modifier
         if (lTrig && !lTrigDown) cylShoot = !cylShoot;
@@ -116,7 +113,7 @@ public class Drive_Train extends OpMode {
 
         outtakeL.setPower(cylShoot && action ? power : 0);  // shoot mode
         outtakeR.setPower(cylShoot && action ? power : 0);
-        intake.setPower(!cylShoot && action ? -.8 : 0); // intake mode
+        intake.setPower(!cylShoot && action ? .8 : 0); // intake mode
 
         double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
         telemetry.addData("cylinder p coeff", p);
