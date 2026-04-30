@@ -107,7 +107,7 @@ public class Drive_Train extends OpMode {
         if (rTrig && !rTrigDown) cylTicks += cylChamberTicks;
         rTrigDown = rTrig;
         //test
-        if (gamepad1.dpadRightWasPressed()) shotPower = !shotPower;
+        if (gamepad1.dpadRightWasPressed()) {shotPower = !shotPower; difference = 0;}
         double power = (shotPower) ? (.43 + difference) : (.60 + difference);
 
         telemetry.addData("shot mode", power);
@@ -117,7 +117,7 @@ public class Drive_Train extends OpMode {
         outtakeL.setPower(cylShoot && action ? power : 0);  // shoot mode
         outtakeR.setPower(cylShoot && action ? power : 0);
         intake.setPower(!cylShoot && action ? -.8 : 0); // intake mode
-
+        telemetry.addData("Intake", intake.getPower());
         double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
         telemetry.addData("cylinder p coeff", p);
         if (gamepad1.dpadUpWasPressed())
