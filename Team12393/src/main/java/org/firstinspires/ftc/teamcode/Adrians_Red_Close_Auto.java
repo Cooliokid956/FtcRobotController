@@ -86,16 +86,15 @@ public class Adrians_Red_Close_Auto extends LinearOpMode {
 
         //Auto starts here
         waitForStart();
-        moveForward(3500);
+        moveForward(3000);
         pause(1500);
-        rev(750);
+        rev(2000, "short");
         launch();
         loadNext();
-        rev(750);
         launch();
         loadNext();
-        rev(750);
         launch();
+        stopRevving();
         goToIntake();
 
         sleep(1000);
@@ -173,13 +172,19 @@ public class Adrians_Red_Close_Auto extends LinearOpMode {
     {
         sleep(ms);
     }
-    private void rev(int ms)
-    {
-        outtake_Motor.setPower(1);
-        reversed_outtake_Motor.setPower(1);
-        pause(ms);
+
+    private void stopRevving() {
         outtake_Motor.setPower(0);
         reversed_outtake_Motor.setPower(0);
+    }
+    private void rev(int ms, String s)
+    {
+        double power = 0;
+        if(s.equals("short")) {power = .43;}
+        else {power = .60;}
+        outtake_Motor.setPower(power);
+        reversed_outtake_Motor.setPower(power);
+        pause(ms);
     }
     private void launch()
     {
@@ -195,6 +200,9 @@ public class Adrians_Red_Close_Auto extends LinearOpMode {
     {
         cylinder.setTargetPosition(cylinderPosition += 96);
         getToPosition(cylinder);
+        pause(200);
+        getToPosition(cylinder);
+        pause(200);
     }
 
     private void goToIntake()

@@ -86,7 +86,7 @@ public class Adrians_Blue_Close_Auto extends LinearOpMode {
 
         //Auto starts here
         waitForStart();
-        moveForward(3500);
+        moveForward(3000);
         pause(1500);
         rev(2000, "short");
         launch();
@@ -194,6 +194,8 @@ public class Adrians_Blue_Close_Auto extends LinearOpMode {
         pause(1000);
         trigger.setPosition(1);
         pause(500);
+        getToPosition(cylinder);
+        pause(200);
     }
 
     private void loadNext()
