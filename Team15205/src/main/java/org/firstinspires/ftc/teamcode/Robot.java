@@ -226,19 +226,19 @@ public class Robot {
     }
     public void encoderDrive(double speed, int frontLeftInches, int frontRightInches, int backLeftInches, int backRightInches, double timeout) {
         //if motors acting wonky refer to their direction
-        encoderReset();
+        ///encoderReset(); Put this method at the start of autonomous
+        int DECELL_TICKS = 500;
         int newFrontLeftTarget;
         int newFrontRightTarget;
         int newBackLeftTarget;
         int newBackRightTarget;
-
         if(opMode.opModeIsActive()) {
             //Determines the target position
             newFrontLeftTarget = flm.getCurrentPosition() + (int)(frontLeftInches * COUNTS_PER_INCH);
             newFrontRightTarget = frm.getCurrentPosition() + (int)(frontRightInches * COUNTS_PER_INCH);
             newBackLeftTarget = blm.getCurrentPosition() + (int)(backLeftInches * COUNTS_PER_INCH);
             newBackRightTarget = brm.getCurrentPosition() + (int)(backRightInches * COUNTS_PER_INCH);
-
+            double currentSpeed;
             flm.setTargetPosition(newFrontLeftTarget);
             frm.setTargetPosition(newFrontRightTarget);
             blm.setTargetPosition(newBackLeftTarget);
@@ -248,12 +248,11 @@ public class Robot {
             frm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             blm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             brm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
             runtime.reset();//resets time and provides power
-            flm.setPower(Math.abs(speed));
-            frm.setPower(Math.abs(speed));
-            blm.setPower(Math.abs(speed));
-            brm.setPower(Math.abs(speed));
+            flm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            frm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            blm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            brm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -261,8 +260,20 @@ public class Robot {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while(opMode.opModeIsActive() && (runtime.seconds() < timeout) && (flm.isBusy() && frm.isBusy() && blm.isBusy() && brm.isBusy())) {
+            while(opMode.opModeIsActive() && (runtime.seconds() < timeout) && (flm.isBusy() || frm.isBusy() || blm.isBusy() || brm.isBusy())) {
                 //Display to driver
+                int remainingTicks = Math.max(Math.max(Math.max(Math.abs(newFrontLeftTarget - flm.getCurrentPosition()), Math.abs(newFrontRightTarget - frm.getCurrentPosition())), Math.abs(newBackLeftTarget - blm.getCurrentPosition())), Math.abs(newBackRightTarget - brm.getCurrentPosition()));
+                double rampUpSpeed = Math.min(speed, runtime.seconds() * 2);
+                double rampDownSpeed = speed;
+                if(remainingTicks < DECELL_TICKS) {
+                    rampDownSpeed = speed * ((double)remainingTicks/ DECELL_TICKS);
+                    rampDownSpeed = Math.max(rampDownSpeed, 0.15);
+                }
+                currentSpeed = Math.min(rampUpSpeed, rampDownSpeed);
+                flm.setPower(currentSpeed);
+                frm.setPower(currentSpeed);
+                blm.setPower(currentSpeed);
+                brm.setPower(currentSpeed);
                 opMode.telemetry.addData("Running to", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
                 opMode.telemetry.addData("Currently at ", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", flm.getCurrentPosition(), frm.getCurrentPosition(), blm.getCurrentPosition(), brm.getCurrentPosition());
                 opMode.telemetry.addData("Total Difference should be: ", "frontLeft: %7d frontRight: %7d \nbackLeft: %7d backRight: %7d", frontLeftInches, frontRightInches, backLeftInches, backRightInches);
@@ -273,7 +284,6 @@ public class Robot {
             frm.setPower(0);
             blm.setPower(0);
             brm.setPower(0);
-            encoderReset();
             opMode.sleep(250);
         }
     }
@@ -386,16 +396,16 @@ public class Robot {
         //return normalize360(AngleUnit.DEGREES.normalize(tarAngle - curAngle));
         return AngleUnit.DEGREES.normalize(tarAngle - curAngle);
     }
+    public void encoderReset() {//put this in autonomoaus
+                flm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                frm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                blm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                brm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-    public void encoderReset() {
-        flm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        frm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        blm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        brm.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                flm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+                frm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+                blm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+                brm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        flm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        frm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        blm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        brm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 }
