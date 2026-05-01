@@ -26,7 +26,8 @@ public class Jasons_Blue_Close_Auto extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 3.77953 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI));
-
+    final double SPEED = 0.80;
+    final int TURN_DISTANCE = 7;
     DcMotorEx cylinder;
 
     int backLeftPosition = 0;
@@ -84,16 +85,55 @@ public class Jasons_Blue_Close_Auto extends LinearOpMode {
         cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         cylinder.setPower(.5);
         cylinder.setPositionPIDFCoefficients(20);
-
         //Auto starts here
         waitForStart();
         //               speed                         distance in inches of motors             timeout in seconds
-        encoderDrive(1.0, 5, 5, 5, 5, 5);
+        encoderDrive(1.0, 5, 5, 5, 5, 7);
         sleep(1000);
         flm.setPower(0);
         frm.setPower(0);
         blm.setPower(0);
         brm.setPower(0);
+    }
+    private void moveForward(int inches) {
+        encoderDrive(SPEED,
+                inches, inches,
+                inches, inches,
+                inches * 1.5);
+    }
+
+    private void moveBackward(int inches) {
+        encoderDrive(SPEED,
+                -inches, -inches,
+                -inches, -inches,
+                inches * 1.5);
+    }
+    private void moveLeft(int inches) {
+        encoderDrive(SPEED,
+                -inches, inches,
+                inches, -inches,
+                inches * 1.5);
+    }
+
+    private void moveRight(int inches) {
+        encoderDrive(SPEED,
+                inches, -inches,
+                -inches, inches,
+                inches * 1.5);
+    }
+
+
+    private void turnRight(int inches) {
+        encoderDrive(SPEED,
+                TURN_DISTANCE, TURN_DISTANCE,
+                TURN_DISTANCE, TURN_DISTANCE,
+                inches * 1.5);
+    }
+    private void turnLeft(int inches) {
+        encoderDrive(SPEED,
+                TURN_DISTANCE, TURN_DISTANCE,
+                TURN_DISTANCE, TURN_DISTANCE,
+                inches * 1.5);
     }
 
     private void getToPosition(DcMotor x, double timeoutS)
