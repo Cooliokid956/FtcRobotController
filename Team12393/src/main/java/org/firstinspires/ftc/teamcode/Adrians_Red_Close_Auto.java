@@ -181,7 +181,7 @@ public class Adrians_Red_Close_Auto extends LinearOpMode {
     {
         double power = 0;
         if(s.equals("short")) {power = .43;}
-        else {power = .60;}
+        else {power = .55;}
         outtake_Motor.setPower(power);
         reversed_outtake_Motor.setPower(power);
         pause(ms);
