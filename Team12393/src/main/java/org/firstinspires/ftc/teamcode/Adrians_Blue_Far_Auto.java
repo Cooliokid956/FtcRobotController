@@ -88,15 +88,13 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
         waitForStart();
         moveBackward(3500);
         pause(500);
-        turnLeft(395);
+        turnLeft(415);
         pause(1500);
-        rev(850);
+        rev(2000,"short");
         launch();
         loadNext();
-        rev(750);
         launch();
         loadNext();
-        rev(750);
         launch();
         goToIntake();
 
@@ -175,13 +173,14 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
     {
         sleep(ms);
     }
-    private void rev(int ms)
+    private void rev(int ms, String s)
     {
-        outtake_Motor.setPower(1);
-        reversed_outtake_Motor.setPower(1);
+        double power = 0;
+        if(s.equals("short")) {power = .43;}
+        else {power = .55;}
+        outtake_Motor.setPower(power);
+        reversed_outtake_Motor.setPower(power);
         pause(ms);
-        outtake_Motor.setPower(0);
-        reversed_outtake_Motor.setPower(0);
     }
     private void launch()
     {
@@ -197,6 +196,9 @@ public class Adrians_Blue_Far_Auto extends LinearOpMode {
     {
         cylinder.setTargetPosition(cylinderPosition += 96);
         getToPosition(cylinder);
+        pause(200);
+        getToPosition(cylinder);
+        pause(200);
     }
 
     private void goToIntake()
