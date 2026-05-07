@@ -21,7 +21,8 @@ public class Drive_Train extends OpMode {
             cylOffsetTicks = 48,
             cylChamberTicks = 96,
             cylTicks;
-    double difference = 0;
+    double differenceShort = 0;
+    double differenceLong = 0;
     boolean
             cylShoot, // (In, Out)
             lTrigDown,
@@ -88,7 +89,7 @@ public class Drive_Train extends OpMode {
         // Powers trigger servo forward (left bumper) or back (button b)
         // if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
 
-//        trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
+//      trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
         trigger.setPosition(gamepad1.left_bumper ? -1 : 1);
 
         // cylinder control code
@@ -104,10 +105,12 @@ public class Drive_Train extends OpMode {
         if (rTrig && !rTrigDown) cylTicks += cylChamberTicks;
         rTrigDown = rTrig;
 
-        if (gamepad1.dpadRightWasPressed()) {shotPower = !shotPower; difference = 0;}
-        double power = (shotPower) ? (.43 + difference) : (.55 + difference);
+        if (gamepad1.dpadRightWasPressed()) {shotPower = !shotPower;}
+        double power = (shotPower) ? (.43 + differenceShort) : (.55 + differenceLong);
 
         telemetry.addData("shot mode", power);
+        telemetry.addData("Difference Short", differenceShort);
+        telemetry.addData("Difference Long", differenceLong);
 
         cylinder.setTargetPosition(cylTicks + (cylShoot ? cylOffsetTicks : 0));
 
@@ -117,10 +120,14 @@ public class Drive_Train extends OpMode {
 
         double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
         telemetry.addData("cylinder p coeff", p);
-        if (gamepad1.dpadUpWasPressed())
-            difference += 0.01;
-        else if (gamepad1.dpadDownWasPressed())
-            difference -= 0.01;
+
+        if (gamepad1.yWasPressed())
+            if (shotPower) differenceShort += 0.01;
+            else differenceLong += 0.01;
+        if (gamepad1.aWasPressed())
+            if (shotPower) differenceShort -= 0.01;
+            else differenceLong -= 0.01;
+
         /*
         Code to calculate the power necessary to give each motor in the strafe mechanism
         the correct power to move where we want it to.
