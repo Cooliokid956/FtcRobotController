@@ -28,7 +28,7 @@ public class Drive_Train extends OpMode {
             lTrigDown,
             rTrigDown;
 
-    boolean shotPower;
+    boolean shotPower = true;
 
     @Override
     public void init() {
@@ -60,7 +60,7 @@ public class Drive_Train extends OpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

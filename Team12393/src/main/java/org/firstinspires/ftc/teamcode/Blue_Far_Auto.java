@@ -58,28 +58,8 @@ public class Blue_Far_Auto extends LinearOpMode {
         frontRightMotor.setTargetPosition(256);
         backLeftMotor.setTargetPosition(256);
         backRightMotor.setTargetPosition(2056); */
-        moveBackward();
-        sleep(525);
-        pause();
-        turnRight();
-        sleep(225);
-        pause();
-        rev();
-        sleep(1500);
-        launch();
-        sleep(2500);
-        pause();
-        turnLeft();
-        sleep(225);
-        pause();
-        moveBackward();
-        sleep(450);
-        turnLeft();
-        sleep(450);
-
-
-
-
+        moveForward();
+        sleep(500);
 
         sleep(1000);
         pause();
