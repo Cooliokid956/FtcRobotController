@@ -1,0 +1,177 @@
+package org.firstinspires.ftc.teamcode;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp
+public class Space_Fest extends OpMode {
+    private DcMotorEx
+            frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor,
+            outtakeL, outtakeR, intake;
+    private Servo trigger;
+
+    DcMotorEx cylinder;
+    int
+            cylOffsetTicks = 48,
+            cylChamberTicks = 96,
+            cylTicks;
+    double differenceShort = 0;
+    double differenceLong = 0;
+    boolean
+            cylShoot, // (In, Out)
+            lTrigDown,
+            rTrigDown;
+
+    boolean shotPower = true;
+
+    @Override
+    public void init() {
+
+        // Webcam -> webcam
+        // ControlHub -> Motors -> 1:Hex 40:1 OuttakeMotor1, 2:GoBilda 5202/3/4? frm 3: GoBilda 5202/3/4? brm
+        // ExpansionHub -> Motors -> 0: GoBilda 5202/3/4? blm 1: GoBilda 5202/3/4? flm 2: Hex Motor 40:1 IntakeMotor 3: Go bilda 5202/3/4 outtakeMotor2
+        outtakeL = hardwareMap.get(DcMotorEx.class, "OuttakeMotor2");
+        outtakeR = hardwareMap.get(DcMotorEx.class, "OuttakeMotor1");
+        intake = hardwareMap.get(DcMotorEx.class, "IntakeMotor" );
+//        Is = hardwareMap.get(CRServo.class, "Is");
+//        rs = hardwareMap.get(CRServo.class, "rs");
+//        trigger = hardwareMap.get(CRServo.class,"trigger");
+        trigger = hardwareMap.get(Servo.class,"trigger");
+//        trigger.setDirection(Servo.Direction.REVERSE);
+        outtakeR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeftMotor = hardwareMap.get(DcMotorEx.class, "flm");
+        frontRightMotor = hardwareMap.get(DcMotorEx.class, "frm");
+        backLeftMotor = hardwareMap.get(DcMotorEx.class, "blm");
+        backRightMotor = hardwareMap.get(DcMotorEx.class, "brm");
+
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        cylinder = hardwareMap.get(DcMotorEx.class, "rotateMotor");
+        cylinder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cylinder.setTargetPosition(0);
+        cylinder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        cylinder.setPower(.8);
+        cylinder.setPositionPIDFCoefficients(20);
+//        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    @Override
+    public void loop() {
+        // Powers Both servos to push upwards when right trigger in held otherwise stops in place
+        /*
+        if (gamepad1.right_trigger >= 0.2) { Is.setPower(-1); rs.setPower(1); } else { Is.setPower(0); rs.setPower(0); }
+        */
+        // Powers Both servos to push downwards when right trigger in held otherwise stops in place
+        /*
+        if (gamepad1.left_trigger >= 0.2) { Is.setPower(1); rs.setPower(-1); } else { Is.setPower(0); rs.setPower(0); }
+        */
+
+
+        // Powers trigger servo forward (left bumper) or back (button b)
+        // if (gamepad1.left_bumper) trigger.setPower(1); else if (gamepad1.b) trigger.setPower(-1); else trigger.setPower(0);
+
+//      trigger.setPower(gamepad1.left_bumper ? 1 : (gamepad1.b ? -1 : 0));
+        trigger.setPosition(gamepad1.left_bumper ? -1 : 1);
+
+        // cylinder control code
+        boolean action = gamepad1.right_bumper;       // R Bumper - Action (Intake/Outtake)
+        boolean lTrig = gamepad1.left_trigger > 0.2;  // L Trigger - Toggle mode
+        boolean rTrig = gamepad1.right_trigger > 0.2; // R Trigger - Rotate cylinder
+
+//        cylShoot = lTrig; // modifier
+        if (lTrig && !lTrigDown) cylShoot = !cylShoot;
+        lTrigDown = lTrig; // toggle
+
+        if (gamepad1.dpadLeftWasPressed()) cylTicks -= cylChamberTicks;
+        if (rTrig && !rTrigDown) cylTicks += cylChamberTicks;
+        rTrigDown = rTrig;
+
+        if (gamepad1.dpadRightWasPressed()) {shotPower = !shotPower;}
+        double power = (shotPower) ? (.43 + differenceShort) : (.55 + differenceLong);
+
+        telemetry.addData("shot mode", power);
+        telemetry.addData("Difference Short", differenceShort);
+        telemetry.addData("Difference Long", differenceLong);
+
+        cylinder.setTargetPosition(cylTicks + (cylShoot ? cylOffsetTicks : 0));
+
+        outtakeL.setPower(cylShoot && action ? power : 0);  // shoot mode
+        outtakeR.setPower(cylShoot && action ? power : 0);
+        intake.setPower(!cylShoot && action ? -.8 : 0); // intake mode
+
+        double p = cylinder.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p;
+        telemetry.addData("cylinder p coeff", p);
+
+        if (gamepad1.yWasPressed())
+            if (shotPower) differenceShort += 0.01;
+            else differenceLong += 0.01;
+        if (gamepad1.aWasPressed())
+            if (shotPower) differenceShort -= 0.01;
+            else differenceLong -= 0.01;
+
+        /*
+        Code to calculate the power necessary to give each motor in the strafe mechanism
+        the correct power to move where we want it to.
+        */
+        double
+                y = -gamepad1.left_stick_y,
+                x = gamepad1.left_stick_x,
+                turn = -gamepad1.right_stick_x,
+                frontLeftPower = y + x - turn,
+                frontRightPower = y - x + turn,
+                backLeftPower = y - x - turn,
+                backRightPower = y + x + turn;
+
+        double maxRawPower = max(max(max(abs(frontLeftPower), abs(backLeftPower)),
+                max(abs(backRightPower), abs(frontRightPower))), cylShoot ? 2 : 1);
+        frontLeftMotor.setPower(frontLeftPower / maxRawPower);
+        frontRightMotor.setPower(frontRightPower / maxRawPower);
+        backLeftMotor.setPower(backLeftPower / maxRawPower);
+        backRightMotor.setPower(backRightPower / maxRawPower);
+
+        telemetry.addData("Front Left Motor: ", frontLeftPower);
+        telemetry.addData("Front Right Motor: ", frontRightPower);
+        telemetry.addData("BackLeftMotor", backLeftPower);
+        telemetry.addData("backRightPower", backRightPower);
+        telemetry.addData("Left Bumper Activated",gamepad1.left_bumper);
+
+        telemetry.addData("TargetPosition", cylinder.getTargetPosition());
+        telemetry.addData("Current Position", cylinder.getCurrentPosition());
+        telemetry.addData("Motor Mode", cylinder.getMode());
+        telemetry.update();
+//        outtakeL.setPower(gamepad1.x ? .8 : gamepad1.a ? -1 : 0);
+//        outtakeR.setPower(gamepad1.x ? 1 : gamepad1.a ? -1 : 0);
+
+//      intake_Motor.setPower(gamepad1.left_bumper ? .8 : gamepad1.right_bumper ? -.8 : 0);
+
+//        double
+//            vel = outtakeR.getVelocity(),
+//            vel2 = outtakeL.getVelocity();
+//
+//        Is.setPower(((vel >= 1500) && (vel2 >= 1500)) || (gamepad1.right_trigger >= 0.25)
+//                ? 1
+//                : (gamepad1.left_bumper ? -1 : 0));
+//        Is.setPower((gamepad1.right_trigger >= 0.25) ? -1 : (gamepad1.left_bumper ? 1 :0));
+    }
+}
+
