@@ -60,17 +60,17 @@ public class Space_Fest extends OpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         cylinder = hardwareMap.get(DcMotorEx.class, "rotateMotor");
         cylinder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         cylinder.setTargetPosition(0);
         cylinder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        cylinder.setPower(.8);
+        cylinder.setPower(.2);
         cylinder.setPositionPIDFCoefficients(20);
 //        cylinder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
