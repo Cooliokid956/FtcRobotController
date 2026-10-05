@@ -107,7 +107,7 @@ public class Space_Fest extends OpMode {
         rTrigDown = rTrig;
 
         if (gamepad1.dpadRightWasPressed()) {shotPower = !shotPower;}
-        double power = (shotPower) ? (.65 + differenceShort) : (.65 + differenceLong);
+        double power = (shotPower) ? (.55 + differenceShort) : (.55 + differenceLong);
 
         telemetry.addData("shot mode", power);
         telemetry.addData("Difference Short", differenceShort);
