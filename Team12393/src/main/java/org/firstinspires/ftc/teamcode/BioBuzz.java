@@ -42,8 +42,8 @@ public class BioBuzz extends OpMode {
     public void loop() {
         double
                 y = gamepad1.left_stick_y,
-                x = gamepad1.left_stick_x,
-                turn = -gamepad1.right_stick_x,
+                x = -gamepad1.left_stick_x,
+                turn = gamepad1.right_stick_x,
                 frontLeftPower = y + x - turn,
                 frontRightPower = y - x + turn,
                 backLeftPower = y - x - turn,
