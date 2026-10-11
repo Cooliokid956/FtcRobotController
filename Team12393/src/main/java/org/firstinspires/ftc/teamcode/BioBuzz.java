@@ -5,9 +5,11 @@ import static java.lang.Math.max;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class BioBuzz extends OpMode {
@@ -16,6 +18,9 @@ public class BioBuzz extends OpMode {
     private DcMotorEx backLeftMotor;
     private DcMotorEx frontRightMotor;
     private DcMotorEx frontLeftMotor;
+    private DcMotorEx intakeMotor;
+    private CRServo leftServo;
+    private CRServo rightServo;
 
     @Override
     public void init() {
@@ -23,9 +28,13 @@ public class BioBuzz extends OpMode {
         frontRightMotor = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeftMotor = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRightMotor = hardwareMap.get(DcMotorEx.class, "backRight");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "im");
+        leftServo = hardwareMap.get(CRServo.class, "ls");
+        rightServo = hardwareMap.get(CRServo.class, "rs");
+
+        leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -40,6 +49,17 @@ public class BioBuzz extends OpMode {
 
     @Override
     public void loop() {
+        if (gamepad1.right_bumper){
+            leftServo.setPower(1);
+            rightServo.setPower(1);
+            intakeMotor.setPower(1);
+        }
+        else{
+            leftServo.setPower(0);
+            rightServo.setPower(0);
+            intakeMotor.setPower(0);
+        }
+
         double
                 y = gamepad1.left_stick_y,
                 x = -gamepad1.left_stick_x,
