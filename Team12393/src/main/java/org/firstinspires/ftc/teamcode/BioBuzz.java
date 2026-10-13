@@ -19,6 +19,7 @@ public class BioBuzz extends OpMode {
     private DcMotorEx frontRightMotor;
     private DcMotorEx frontLeftMotor;
     private DcMotorEx intakeMotor;
+    private DcMotorEx outtakeMotor;
     private CRServo leftServo;
     private CRServo rightServo;
 
@@ -29,11 +30,12 @@ public class BioBuzz extends OpMode {
         backLeftMotor = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRightMotor = hardwareMap.get(DcMotorEx.class, "backRight");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "im");
+        outtakeMotor = hardwareMap.get(DcMotorEx.class,"om");
+
         leftServo = hardwareMap.get(CRServo.class, "ls");
         rightServo = hardwareMap.get(CRServo.class, "rs");
 
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
-
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -53,12 +55,14 @@ public class BioBuzz extends OpMode {
             leftServo.setPower(1);
             rightServo.setPower(1);
             intakeMotor.setPower(1);
-        }
-        else{
+        } else {
             leftServo.setPower(0);
             rightServo.setPower(0);
             intakeMotor.setPower(0);
         }
+
+        if(gamepad1.left_bumper) {outtakeMotor.setPower(1);}
+        else {outtakeMotor.setPower(0);}
 
         double
                 y = gamepad1.left_stick_y,
