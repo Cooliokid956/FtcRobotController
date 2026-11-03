@@ -13,15 +13,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class BioBuzz extends OpMode {
-
+    private boolean liftUp = false;
+    private boolean lastLeftBumper = false;
     private DcMotorEx backRightMotor;
     private DcMotorEx backLeftMotor;
     private DcMotorEx frontRightMotor;
     private DcMotorEx frontLeftMotor;
     private DcMotorEx intakeMotor;
-    private DcMotorEx outtakeMotor;
+    private DcMotorEx liftMotor;
+    private DcMotorEx shooterIntakeMotor;
     private CRServo leftServo;
     private CRServo rightServo;
+
+    private Servo basketServo;
+
 
     @Override
     public void init() {
@@ -30,13 +35,17 @@ public class BioBuzz extends OpMode {
         backLeftMotor = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRightMotor = hardwareMap.get(DcMotorEx.class, "backRight");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "im");
-        outtakeMotor = hardwareMap.get(DcMotorEx.class,"om");
+        liftMotor = hardwareMap.get(DcMotorEx.class,"lm");
+        shooterIntakeMotor = hardwareMap.get(DcMotorEx.class, "sim");
 
         leftServo = hardwareMap.get(CRServo.class, "ls");
         rightServo = hardwareMap.get(CRServo.class, "rs");
+        basketServo = hardwareMap.get(Servo.class, "bs");
 
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -47,10 +56,16 @@ public class BioBuzz extends OpMode {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     @Override
     public void loop() {
+
+        //Intake System with the servo and Intake Motor
         if (gamepad1.right_bumper){
             leftServo.setPower(1);
             rightServo.setPower(1);
@@ -61,8 +76,21 @@ public class BioBuzz extends OpMode {
             intakeMotor.setPower(0);
         }
 
-        if(gamepad1.left_bumper) {outtakeMotor.setPower(1);}
-        else {outtakeMotor.setPower(0);}
+        //Lift Mechanism
+        boolean leftBumper = gamepad1.left_bumper;
+
+        if (leftBumper && !lastLeftBumper) {
+            liftUp = !liftUp;
+        }
+        lastLeftBumper = leftBumper;
+
+        liftMotor.setTargetPosition(liftUp ? 660 : 0);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(.1);
+
+
+        //Shooter Mechanism
+        shooterIntakeMotor.setPower(gamepad1.right_trigger >= 0.25 ? 1 : 0);
 
         double
                 y = gamepad1.left_stick_y,
@@ -85,5 +113,8 @@ public class BioBuzz extends OpMode {
         telemetry.addData("Front Right Motor: ", frontRightPower);
         telemetry.addData("BackLeftMotor", backLeftPower);
         telemetry.addData("backRightPower", backRightPower);
+        telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
+        telemetry.addData("going up", liftUp);
+        telemetry.addData("open basket", gamepad1.y);
     }
 }
