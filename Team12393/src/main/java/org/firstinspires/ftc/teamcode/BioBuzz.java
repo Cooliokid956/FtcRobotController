@@ -20,6 +20,7 @@ public class BioBuzz extends OpMode {
     private DcMotorEx frontRightMotor;
     private DcMotorEx frontLeftMotor;
     private DcMotorEx intakeMotor;
+    private DcMotorEx launchMotor;
     private DcMotorEx liftMotor;
     private DcMotorEx shooterIntakeMotor;
     private CRServo leftServo;
@@ -37,6 +38,7 @@ public class BioBuzz extends OpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "im");
         liftMotor = hardwareMap.get(DcMotorEx.class,"lm");
         shooterIntakeMotor = hardwareMap.get(DcMotorEx.class, "sim");
+        launchMotor = hardwareMap.get(DcMotorEx.class,"launchm");
 
         leftServo = hardwareMap.get(CRServo.class, "ls");
         rightServo = hardwareMap.get(CRServo.class, "rs");
@@ -46,6 +48,7 @@ public class BioBuzz extends OpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -91,6 +94,7 @@ public class BioBuzz extends OpMode {
 
         //Shooter Mechanism
         shooterIntakeMotor.setPower(gamepad1.right_trigger >= 0.25 ? 1 : 0);
+        launchMotor.setPower(gamepad1.left_trigger >= 0.25 ? 1 : 0);
 
         double
                 y = gamepad1.left_stick_y,
@@ -116,5 +120,6 @@ public class BioBuzz extends OpMode {
         telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
         telemetry.addData("going up", liftUp);
         telemetry.addData("open basket", gamepad1.y);
+        telemetry.addData("shooting", launchMotor.getPower());
     }
 }
