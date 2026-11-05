@@ -14,7 +14,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class BioBuzz extends OpMode {
     private boolean liftUp = false;
+    private boolean openBasket = false;
     private boolean lastLeftBumper = false;
+    private boolean lastgamepadY = false;
     private DcMotorEx backRightMotor;
     private DcMotorEx backLeftMotor;
     private DcMotorEx frontRightMotor;
@@ -86,6 +88,15 @@ public class BioBuzz extends OpMode {
             liftUp = !liftUp;
         }
         lastLeftBumper = leftBumper;
+
+        boolean gamepadY = gamepad1.y;
+
+        if (gamepadY && !lastgamepadY) {
+            openBasket = !openBasket;
+        }
+        lastgamepadY = gamepadY;
+
+        basketServo.setPosition(openBasket ? 0 : .5);
 
         liftMotor.setTargetPosition(liftUp ? 660 : 0);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
