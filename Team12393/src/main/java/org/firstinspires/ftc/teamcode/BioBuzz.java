@@ -96,7 +96,7 @@ public class BioBuzz extends OpMode {
         }
         lastgamepadY = gamepadY;
 
-        basketServo.setPosition(openBasket ? 0 : .5);
+        basketServo.setPosition(openBasket ? 0 : 1);
 
         liftMotor.setTargetPosition(liftUp ? 660 : 0);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
