@@ -57,6 +57,8 @@ public class BioBuzz extends OpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -96,11 +98,11 @@ public class BioBuzz extends OpMode {
         }
         lastgamepadY = gamepadY;
 
-        basketServo.setPosition(openBasket ? 0 : 1);
+        basketServo.setPosition(openBasket ? 0 : .5);
 
-        liftMotor.setTargetPosition(liftUp ? 660 : 0);
+        liftMotor.setTargetPosition(liftUp ? 680 : 0);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(.1);
+        liftMotor.setPower(.3);
 
 
         //Shooter Mechanism
