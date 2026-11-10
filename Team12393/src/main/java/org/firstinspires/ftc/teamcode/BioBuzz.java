@@ -46,6 +46,8 @@ public class BioBuzz extends OpMode {
         rightServo = hardwareMap.get(CRServo.class, "rs");
         basketServo = hardwareMap.get(Servo.class, "bs");
 
+        basketServo.setPosition(0.5);
+
         leftServo.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -91,6 +93,22 @@ public class BioBuzz extends OpMode {
         }
         lastLeftBumper = leftBumper;
 
+        int liftTarget = liftUp ? 669 : 0;
+
+        liftMotor.setTargetPosition(liftTarget);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        boolean arrived = Math.abs(liftMotor.getCurrentPosition() - liftTarget) <= 15;
+
+        if (!arrived) {
+            liftMotor.setPower(0.3);   // moving
+        } else if (liftUp) {
+            liftMotor.setPower(0.05);  // top: light hold against gravity (try 0 first)
+//            liftMotor.setPower(0);
+        } else {
+            liftMotor.setPower(0);     // bottom: resting on the hard stop
+        }
+
         boolean gamepadY = gamepad1.y;
 
         if (gamepadY && !lastgamepadY) {
@@ -99,10 +117,6 @@ public class BioBuzz extends OpMode {
         lastgamepadY = gamepadY;
 
         basketServo.setPosition(openBasket ? 0 : .5);
-
-        liftMotor.setTargetPosition(liftUp ? 680 : 0);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(.3);
 
 
         //Shooter Mechanism
@@ -132,7 +146,7 @@ public class BioBuzz extends OpMode {
         telemetry.addData("backRightPower", backRightPower);
         telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
         telemetry.addData("going up", liftUp);
-        telemetry.addData("open basket", gamepad1.y);
+        telemetry.addData("open basket", openBasket);
         telemetry.addData("shooting", launchMotor.getPower());
     }
 }
