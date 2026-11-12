@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class BioBuzz extends OpMode {
@@ -17,6 +18,8 @@ public class BioBuzz extends OpMode {
     private boolean openBasket = false;
     private boolean lastLeftBumper = false;
     private boolean lastgamepadY = false;
+    private boolean homing = false;
+    private final ElapsedTime homeTimer = new ElapsedTime();
     private DcMotorEx backRightMotor;
     private DcMotorEx backLeftMotor;
     private DcMotorEx frontRightMotor;
@@ -27,7 +30,6 @@ public class BioBuzz extends OpMode {
     private DcMotorEx shooterIntakeMotor;
     private CRServo leftServo;
     private CRServo rightServo;
-
     private Servo basketServo;
 
 
@@ -90,23 +92,37 @@ public class BioBuzz extends OpMode {
 
         if (leftBumper && !lastLeftBumper) {
             liftUp = !liftUp;
+            if (liftUp) {
+                homing = false;
+                liftMotor.setTargetPosition(669);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            } else {
+                homing = true;                       // start driving down to the hard stop
+                homeTimer.reset();
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
         }
         lastLeftBumper = leftBumper;
 
-        int liftTarget = liftUp ? 669 : 0;
+        if (liftUp) {
+            boolean arrived = Math.abs(liftMotor.getCurrentPosition() - 669) <= 15;
+            liftMotor.setPower(arrived ? 0.05 : 0.3);   // light hold at top
+        } else if (homing) {
+            liftMotor.setPower(-0.2);                   // slow, gentle push down
 
-        liftMotor.setTargetPosition(liftTarget);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // after a short grace period, if it has stopped moving, it's on the hard stop
+            boolean stalled = homeTimer.seconds() > 0.4
+                    && Math.abs(liftMotor.getVelocity()) < 10;
+            boolean timedOut = homeTimer.seconds() > 3.0;   // safety so it never grinds forever
 
-        boolean arrived = Math.abs(liftMotor.getCurrentPosition() - liftTarget) <= 15;
-
-        if (!arrived) {
-            liftMotor.setPower(0.3);   // moving
-        } else if (liftUp) {
-            liftMotor.setPower(0.05);  // top: light hold against gravity (try 0 first)
-//            liftMotor.setPower(0);
+            if (stalled || timedOut) {
+                liftMotor.setPower(0);
+                liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // position = 0 here
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                homing = false;
+            }
         } else {
-            liftMotor.setPower(0);     // bottom: resting on the hard stop
+            liftMotor.setPower(0);                      // resting at bottom
         }
 
         boolean gamepadY = gamepad1.y;
@@ -144,9 +160,20 @@ public class BioBuzz extends OpMode {
         telemetry.addData("Front Right Motor: ", frontRightPower);
         telemetry.addData("BackLeftMotor", backLeftPower);
         telemetry.addData("backRightPower", backRightPower);
-        telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
-        telemetry.addData("going up", liftUp);
+
         telemetry.addData("open basket", openBasket);
         telemetry.addData("shooting", launchMotor.getPower());
+        // Lift / homing diagnostics
+        telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
+        telemetry.addData("Lift Velocity", liftMotor.getVelocity());
+        telemetry.addData("Lift Power", liftMotor.getPower());
+        telemetry.addData("Lift Mode", liftMotor.getMode());
+        telemetry.addData("Lift Target", liftUp ? 669 : 0);
+        telemetry.addData("liftUp", liftUp);
+        telemetry.addData("homing", homing);
+        telemetry.addData("Home Timer (s)", homing ? homeTimer.seconds() : 0.0);
+        telemetry.addData("Stall Candidate",
+                homing && homeTimer.seconds() > 0.4 && Math.abs(liftMotor.getVelocity()) < 10);
+        telemetry.update();
     }
 }
