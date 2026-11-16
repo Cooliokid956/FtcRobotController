@@ -94,7 +94,7 @@ public class BioBuzz extends OpMode {
             liftUp = !liftUp;
             if (liftUp) {
                 homing = false;
-                liftMotor.setTargetPosition(669);
+                liftMotor.setTargetPosition(677);
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             } else {
                 homing = true;                       // start driving down to the hard stop
