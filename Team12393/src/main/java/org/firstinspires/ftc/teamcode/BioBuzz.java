@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class BioBuzz extends OpMode {
+    private static final int LIFT_TOP = 677;               // single source of truth for the top position
+    private static final double LIFTED_DRIVE_SCALE = 0.4;  // 40% drive speed while lifted
     private boolean liftUp = false;
     private boolean openBasket = false;
     private boolean lastLeftBumper = false;
@@ -151,10 +153,14 @@ public class BioBuzz extends OpMode {
         double maxRawPower = Math.max(1.0, max(max(abs(frontLeftPower), abs(backLeftPower)),
                 max(abs(backRightPower), abs(frontRightPower))));
 
-        frontLeftMotor.setPower(frontLeftPower / maxRawPower);
-        frontRightMotor.setPower(frontRightPower / maxRawPower);
-        backLeftMotor.setPower(backLeftPower / maxRawPower);
-        backRightMotor.setPower(backRightPower / maxRawPower);
+        // Slow the drivetrain while the lift is raised (or still coming down)
+        boolean liftIsRaised = liftUp || liftMotor.getCurrentPosition() > 100;
+        double driveScale = liftIsRaised ? LIFTED_DRIVE_SCALE : 1.0;
+
+        frontLeftMotor.setPower(frontLeftPower / maxRawPower * driveScale);
+        frontRightMotor.setPower(frontRightPower / maxRawPower * driveScale);
+        backLeftMotor.setPower(backLeftPower / maxRawPower * driveScale);
+        backRightMotor.setPower(backRightPower / maxRawPower * driveScale);
 
         telemetry.addData("Front Left Motor: ", frontLeftPower);
         telemetry.addData("Front Right Motor: ", frontRightPower);
@@ -174,6 +180,7 @@ public class BioBuzz extends OpMode {
         telemetry.addData("Home Timer (s)", homing ? homeTimer.seconds() : 0.0);
         telemetry.addData("Stall Candidate",
                 homing && homeTimer.seconds() > 0.4 && Math.abs(liftMotor.getVelocity()) < 10);
+        telemetry.addData("Drive Scale", driveScale);
         telemetry.update();
     }
 }
